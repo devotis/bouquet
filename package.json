@@ -1,7 +1,7 @@
 {
     "name": "bouquet",
     "description": "A bouquet of little functions, wrappers and libraries that I use across projects and clients 💐",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "exports": {
         ".": "./src/index.js",
         "./": "./src/"
