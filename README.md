@@ -11,12 +11,5 @@ A bouquet of little functions, wrappers and libraries that I use across projects
 ### mssql
 
 ```javascript
-const {
-    connect,
-    query,
-    close,
-    all,
-    one,
-    tag,
-} = require('bouquet/mssql');
+const { connect, query, close, all, one, tag } = require('bouquet/mssql');
 ```

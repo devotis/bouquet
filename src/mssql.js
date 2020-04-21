@@ -42,7 +42,10 @@ const poolPromise = new Promise((resolve, reject) => {
                 resolve(pool);
             })
             .catch(err => {
-                logger.error('bouquet - mssql - connection Failed! Bad Config: ', err);
+                logger.error(
+                    'bouquet - mssql - connection Failed! Bad Config: ',
+                    err
+                );
                 reject(err);
             });
     };
