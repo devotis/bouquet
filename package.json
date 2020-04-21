@@ -1,0 +1,8 @@
+{
+  "name": "bouquet",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/devotis/bouquet.git",
+  "author": "Christiaan Westerbeek <chris@devotis.nl>",
+  "license": "MIT"
+}
