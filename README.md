@@ -4,7 +4,7 @@ A bouquet of little functions, wrappers and libraries that I use across projects
 
 ## Install
 
-`yarn add -D @devotis/bouquet` (or npm)
+`yarn add @devotis/bouquet` (or npm)
 
 ## Usage
 
