@@ -13,7 +13,7 @@ A bouquet of little functions, wrappers and libraries that I use across projects
 Functions to connect to and query SQL Server using node-mssql as a dependency.
 
 ```javascript
-const { connect, query, close, all, one, tag } = require('bouquet/mssql');
+const { connect, query, close, all, one, tag } = require('@devotis/bouquet/mssql');
 ```
 
 ### express
@@ -21,5 +21,5 @@ const { connect, query, close, all, one, tag } = require('bouquet/mssql');
 Functions to be used in conjunction with Express.
 
 ```javascript
-const { getRemoteAddress } = require('bouquet/express');
+const { getRemoteAddress } = require('@devotis/bouquet/express');
 ```
