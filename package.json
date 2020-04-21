@@ -1,6 +1,10 @@
 {
     "name": "bouquet",
     "version": "1.0.0",
+    "exports": {
+        ".": "./src/index.js",
+        "./": "./src/"
+    },
     "main": "src/index.js",
     "repository": "https://github.com/devotis/bouquet.git",
     "author": "Christiaan Westerbeek <chris@devotis.nl>",
