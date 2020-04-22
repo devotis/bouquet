@@ -10,7 +10,7 @@ A bouquet of little functions, wrappers and libraries that I use across projects
 
 ### mssql
 
-Functions to connect to and query SQL Server using node-mssql as a dependency.
+Functions to connect to and query SQL Server using [node-mssql](https://github.com/tediousjs/node-mssql) as a dependency.
 
 ```javascript
 const {
@@ -40,11 +40,10 @@ const {
 
 ### logger
 
-All same as the logfmt based [heroku-logger](https://github.com/ianstormtaylor/heroku-logger), but allows logging an error object along with context-specific error message ([issues](https://github.com/ianstormtaylor/heroku-logger/issues/15))
+All same as the logfmt based [heroku-logger](https://github.com/ianstormtaylor/heroku-logger), but allows logging an error object along with context-specific error message ([issues](https://github.com/ianstormtaylor/heroku-logger/issues/15)) and the express req object
 
 ```javascript
 const logger = require('@devotis/bouquet/logger');
 
 logger.error('Custom message', error, req);
-//
 ```
