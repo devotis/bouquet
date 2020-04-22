@@ -38,7 +38,8 @@ const poolPromise = new Promise((resolve, reject) => {
         new sql.ConnectionPool(config)
             .connect()
             .then(pool => {
-                logger.info('bouquet/mssql > connected');
+                const { password, ...rest } = pool.config;
+                logger.info('bouquet/mssql > connected', rest);
                 resolve(pool);
             })
             .catch(err => {
