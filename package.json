@@ -1,7 +1,7 @@
 {
     "name": "@devotis/bouquet",
     "description": "A bouquet of little functions, wrappers and libraries that I use across projects and clients 💐",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "exports": {
         ".": "./src/index.js",
         "./": "./src/"
