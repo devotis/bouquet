@@ -6,7 +6,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 const port = process.env.PORT || 5000;
 
 const errorHandling = server => {
-    logger.info('bouquet - express - setup error handling');
+    logger.info('bouquet/express > setup error handling');
 
     // catch 404 and forward to error handler
     server.use((req, res, next) => {
@@ -15,7 +15,7 @@ const errorHandling = server => {
     // eslint-disable-next-line no-unused-vars
     server.use((err, req, res, next) => {
         const status = err.status || 500;
-        logger.error('bouquet - express - request error', err, req);
+        logger.error('bouquet/express > request error', err, req);
 
         res.status(status);
         res.json({
@@ -40,19 +40,19 @@ const errorHandling = server => {
 };
 
 const startServer = server => {
-    logger.info('bouquet - express - starting server');
+    logger.info('bouquet/express > starting server');
 
     server.listen(port, error => {
         if (error) {
-            logger.error('bouquet - express - unable to start server', error);
+            logger.error('bouquet/express > unable to start server', error);
         } else {
-            logger.info('bouquet - express - started server', { port });
+            logger.info('bouquet/express > started server', { port });
             console.log(listEndpoints(server));
         }
     });
 };
 
 module.exports = {
-    errorHandling,
-    startServer,
+    setupErrorHandling: errorHandling,
+    setupStartServer: startServer,
 };

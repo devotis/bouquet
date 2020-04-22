@@ -32,7 +32,7 @@ tape('functions', t => {
                 'ensureCsrfProtected',
                 'ensureTraceProtected',
             ],
-            setup: ['errorHandling', 'startServer'],
+            setup: ['setupErrorHandling', 'setupStartServer'],
         },
     };
 

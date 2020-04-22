@@ -29,7 +29,7 @@ const poolPromise = new Promise((resolve, reject) => {
                 : {}),
             ...extraConfig,
         };
-        logger.info('bouquet - mssql - connecting', {
+        logger.info('bouquet/mssql > connecting', {
             user,
             server,
             database,
@@ -38,12 +38,12 @@ const poolPromise = new Promise((resolve, reject) => {
         new sql.ConnectionPool(config)
             .connect()
             .then(pool => {
-                logger.info('bouquet - mssql - connected');
+                logger.info('bouquet/mssql > connected');
                 resolve(pool);
             })
             .catch(err => {
                 logger.error(
-                    'bouquet - mssql - connection Failed! Bad Config: ',
+                    'bouquet/mssql > connection Failed! Bad Config: ',
                     err
                 );
                 reject(err);
@@ -56,11 +56,11 @@ const query = async (sql, title) => {
     const no = ++queryCounter;
 
     if (!sql) {
-        logger.error('bouquet - mssql - missing sql statement to query');
-        throw new Error('bouquet - mssql - missing sql statement to query');
+        logger.error('bouquet/mssql > missing sql statement to query');
+        throw new Error('bouquet/mssql > missing sql statement to query');
     }
 
-    logger.info('bouquet - mssql - executing query', {
+    logger.info('bouquet/mssql > executing query', {
         no,
         title,
         sql: sql
@@ -76,7 +76,7 @@ const query = async (sql, title) => {
     try {
         result = await pool.query(sql);
     } catch (err) {
-        logger.error('bouquet - mssql - query error', {
+        logger.error('bouquet/mssql > query error', {
             no,
             title,
         });
@@ -84,7 +84,7 @@ const query = async (sql, title) => {
         throw err;
     }
 
-    logger.info('bouquet - mssql - query completed', {
+    logger.info('bouquet/mssql > query completed', {
         no,
         title,
         recordsets: result.recordsets.length,
@@ -99,7 +99,7 @@ const query = async (sql, title) => {
 const close = async () => {
     const pool = await poolPromise;
     pool.close();
-    logger.info('bouquet - mssql - pool closed');
+    logger.info('bouquet/mssql > pool closed');
 };
 
 const all = async sql => {
