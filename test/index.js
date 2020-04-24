@@ -6,6 +6,7 @@ tape('logger', t => {
     const {
         getInfoOfObject,
         makeErrorArguments,
+        sortMessageFirstAndStackLast,
     } = require('../src/logger/_private');
 
     const reqHeaders = {
@@ -26,6 +27,14 @@ tape('logger', t => {
         info: 3,
     };
     const error = new Error('x');
+
+    t.deepEqual(
+        ['z', 'x', 'y', 'stack', 'message', 'a', 'b'].sort(
+            sortMessageFirstAndStackLast
+        ),
+        ['message', 'z', 'x', 'y', 'a', 'b', 'stack'],
+        'sortMessageFirstAndStackLast'
+    );
 
     const info1 = getInfoOfObject(error);
     const info2 = getInfoOfObject(additionalInfo);

@@ -1,21 +1,16 @@
 const { getRemoteAddress } = require('../express/utils');
 
+const sortMessageFirstAndStackLast = (a, b) =>
+    // sort `message` as first and `stack` as last one
+    a === 'stack' ? 1 : b === 'stack' ? -1 : a === 'message' ? -1 : 0;
+
 const getInfoOfObject = (obj = {}) => {
     if (obj instanceof Error) {
         // it is an Error instance
         return [
             'error',
             Object.getOwnPropertyNames(obj)
-                .sort((a, b) =>
-                    // sort `message` as first and `stack` as last one
-                    a === 'stack'
-                        ? 1
-                        : b === 'stack'
-                        ? -1
-                        : a === 'message'
-                        ? -1
-                        : 0
-                )
+                .sort(sortMessageFirstAndStackLast)
                 .reduce((acc, name) => {
                     // may contain message and stack
                     // but also code, hint, details (pg)
@@ -64,4 +59,8 @@ const makeErrorArguments = (one, two = {}, three = {}) => {
     ];
 };
 
-module.exports = { getInfoOfObject, makeErrorArguments };
+module.exports = {
+    sortMessageFirstAndStackLast,
+    getInfoOfObject,
+    makeErrorArguments,
+};
