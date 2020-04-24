@@ -77,10 +77,10 @@ const send = async ({ to, bcc, data, TemplateID, mock }) => {
         }
         logger.info('bouquet/mailjet > sent', email.body);
     } catch (error) {
-        console.log(error);
-        const errorMessage = `${error.ErrorMessage} (${error.statusCode}): ${error.response.text}`;
-        logger.error('bouquet/mailjet > error', error);
-        throw new Error(errorMessage);
+        // https://github.com/mailjet/mailjet-apiv3-nodejs/blob/0a849c36448be225001fcdc3193d17f03d1396a0/mailjet-client.js#L321-L326
+        const { response, ...errObject } = error; // strip response to prevent huge logs
+        logger.error('bouquet/mailjet > error', errObject);
+        throw error;
     }
     // email.body = {
     //     Sent: [
