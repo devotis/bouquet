@@ -56,3 +56,18 @@ logger.error('Custom error message', error);
 logger.error('Custom error message', error, { some, additional, info });
 logger.error('Custom error message', error, req);
 ```
+
+### mailjet
+
+```javascript
+const { connect, send } = require('@devotis/bouquet/mailjet');
+
+connect();
+
+await sendJetEmail({
+    to: 'someone@example.com',,
+    // bcc,
+    data: { some data },
+    TemplateID: <Mailjet Template ID number>,
+});
+```

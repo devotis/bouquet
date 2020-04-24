@@ -18,7 +18,8 @@
         "express-list-endpoints": "4.0.1",
         "heroku-logger": "0.3.3",
         "http-errors": "1.7.3",
-        "mssql": "6.2.0"
+        "mssql": "6.2.0",
+        "node-mailjet": "3.3.1"
     },
     "devDependencies": {
         "babel-eslint": "10.0.3",

@@ -34,6 +34,9 @@ tape('functions', t => {
             ],
             setup: ['setupErrorHandling', 'setupStartServer'],
         },
+        mailjet: {
+            index: ['connect', 'send'],
+        },
     };
 
     // iterate over submodules
