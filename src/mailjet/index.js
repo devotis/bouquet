@@ -10,7 +10,7 @@ const {
 let mailjet;
 
 const connect = () => {
-    logger.info('bouquet/mailjet > connecting');
+    logger.info('bouquet/mailjet > connecting', { version: MJ_VERSION });
     mailjet = Mailjet.connect(MJ_APIKEY_GT_PUBLIC, MJ_APIKEY_GT_PRIVATE);
 };
 
