@@ -19,6 +19,7 @@ const defaultConfig = {
 };
 
 let connect;
+let cp;
 
 const poolPromise = new Promise((resolve, reject) => {
     connect = (asAdmin, extraConfig = {}) => {
@@ -35,9 +36,12 @@ const poolPromise = new Promise((resolve, reject) => {
             database,
             asAdmin,
         });
-        new sql.ConnectionPool(config)
-            .connect()
+        cp = new sql.ConnectionPool(config);
+
+        cp.connect()
             .then(pool => {
+                // note that the resolved `pool` is the same thing as `cp`
+                // pool === cp > true
                 const { password, ...rest } = pool.config;
                 logger.info('bouquet/mssql > connected', rest);
                 resolve(pool);
@@ -122,6 +126,8 @@ const tag = async () => {
 };
 
 module.exports = {
+    cp,
+    mssql: sql,
     connect,
     query,
     close,

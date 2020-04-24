@@ -20,6 +20,8 @@ const {
     all,
     one,
     tag,
+    cp, // the connection pool for raw usage with for example:
+    mssql, // const request = new mssql.Request(cp);
 } = require('@devotis/bouquet/mssql');
 ```
 
