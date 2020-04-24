@@ -47,5 +47,13 @@ All same as the logfmt based [heroku-logger](https://github.com/ianstormtaylor/h
 ```javascript
 const logger = require('@devotis/bouquet/logger');
 
-logger.error('Custom message', error, req);
+const error = new Error(x);
+// req is the express req object.
+
+logger.error(error);
+logger.error(error, { some, additional, info });
+logger.error(error, req);
+logger.error('Custom error message', error);
+logger.error('Custom error message', error, { some, additional, info });
+logger.error('Custom error message', error, req);
 ```
