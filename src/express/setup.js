@@ -1,6 +1,6 @@
-const logger = require('heroku-logger');
 const createError = require('http-errors');
 const listEndpoints = require('express-list-endpoints');
+const logger = require('../logger');
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 const port = process.env.PORT || 5000;

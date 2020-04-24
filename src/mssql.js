@@ -1,5 +1,5 @@
-const logger = require('heroku-logger');
 const sql = require('mssql');
+const logger = require('./logger');
 
 const {
     MSSQL_WEB_USER: user,
@@ -81,11 +81,10 @@ const query = async (sql, title) => {
     try {
         result = await pool.query(sql);
     } catch (err) {
-        logger.error('bouquet/mssql > query error', {
+        logger.error('bouquet/mssql > query error', err, {
             no,
             title,
         });
-        logger.error(err);
         throw err;
     }
 
