@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Also export the connections pool and mssql directly
 
+### Changed
+
+-   Refactor logger.error code
+-   Use own logger internally
+
 ## [1.0.2] - 2020-04-22
 
 ### Added
