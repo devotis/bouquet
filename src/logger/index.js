@@ -1,5 +1,5 @@
 const logger = require('heroku-logger');
-const getInfoOfObject = require('./_private');
+const { makeErrorArguments } = require('./_private');
 
 // Log an error object along with context-specific error message #15
 // https://github.com/ianstormtaylor/heroku-logger/issues/15
@@ -13,24 +13,9 @@ const getInfoOfObject = require('./_private');
 // logger.error('Custom error message, new Error(x), req);
 const error = (one, two = {}, three = {}) => {
     // convert Error instance to object
-    const [twoType, twoInfo] = getInfoOfObject(two);
-    const [threeType, threeInfo] = getInfoOfObject(three);
+    const args = makeErrorArguments(one, two, three);
 
-    // Add info only when it's there
-    const allInfo = {};
-
-    if (twoType !== 'empty') {
-        allInfo[twoType] = twoInfo;
-    }
-    if (threeType !== 'empty') {
-        allInfo[threeType] = threeInfo;
-    }
-
-    return logger.error.call(
-        logger,
-        one, // a string message or Error instance
-        allInfo
-    );
+    return logger.error.apply(logger, args);
 };
 
 module.exports = {

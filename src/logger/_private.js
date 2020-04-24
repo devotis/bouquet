@@ -31,17 +31,37 @@ const getInfoOfObject = (obj = {}) => {
             'req',
             {
                 'request-id': obj.headers['x-request-id'], // https://brandur.org/request-ids
-                ip: getRemoteAddress(),
+                ip: getRemoteAddress(obj),
                 method: obj.method,
                 originalUrl: obj.originalUrl,
-                status,
             },
         ];
     } else if (Object.keys(obj).length) {
         // it is some other non-empty object
-        return ['object', obj];
+        return ['info', obj];
     }
     return ['empty'];
 };
 
-module.exports = getInfoOfObject;
+const makeErrorArguments = (one, two = {}, three = {}) => {
+    // convert Error instance to object
+    const [twoType, twoInfo] = getInfoOfObject(two);
+    const [threeType, threeInfo] = getInfoOfObject(three);
+
+    // Add info only when it's there
+    const allInfo = {};
+
+    if (twoType !== 'empty') {
+        allInfo[twoType] = twoInfo;
+    }
+    if (threeType !== 'empty') {
+        allInfo[threeType] = threeInfo;
+    }
+
+    return [
+        one, // a string message or Error instance
+        allInfo,
+    ];
+};
+
+module.exports = { getInfoOfObject, makeErrorArguments };
