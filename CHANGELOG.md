@@ -11,7 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+-   Mailjet submodule
 -   Also export the connections pool and mssql directly
+-   Test suite for the logger
 
 ### Changed
 
