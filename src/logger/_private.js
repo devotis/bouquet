@@ -1,3 +1,5 @@
+const useragent = require('useragent');
+const querystring = require('querystring');
 const { getRemoteAddress } = require('../express/utils');
 
 const sortMessageFirstAndStackLast = (a, b) =>
@@ -27,8 +29,21 @@ const getInfoOfObject = (obj = {}) => {
             {
                 'request-id': obj.headers['x-request-id'], // https://brandur.org/request-ids
                 ip: getRemoteAddress(obj),
+                ua: useragent.parse(obj.headers['user-agent']).toString(),
                 method: obj.method,
                 originalUrl: obj.originalUrl,
+                query:
+                    obj.query && Object.keys(obj.query).length
+                        ? querystring.stringify(obj.query)
+                        : null,
+                body:
+                    obj.body && Object.keys(obj.body).length ? obj.body : null,
+                headers: obj.headers,
+                csrf: obj.csrfToken ? obj.csrfToken() : undefined,
+                auth: obj.isAuthenticated && obj.isAuthenticated(),
+                sessionID: obj.sessionID,
+                protocol: obj.protocol,
+                host: obj.get('host'),
             },
         ];
     } else if (Object.keys(obj).length) {

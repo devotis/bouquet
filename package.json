@@ -1,7 +1,7 @@
 {
     "name": "@devotis/bouquet",
     "description": "A bouquet of little functions, wrappers and libraries that I use across projects and clients 💐",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "exports": {
         ".": "./src/index.js",
         "./": "./src/"
@@ -19,7 +19,8 @@
         "heroku-logger": "0.3.3",
         "http-errors": "1.7.3",
         "mssql": "6.2.0",
-        "node-mailjet": "3.3.1"
+        "node-mailjet": "3.3.1",
+        "useragent": "2.3.0"
     },
     "devDependencies": {
         "babel-eslint": "10.0.3",
