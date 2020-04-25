@@ -3,3 +3,4 @@ module.exports.mssql = require('./mssql');
 module.exports.express = require('./express');
 module.exports.logger = require('./logger');
 module.exports.mailjet = require('./mailjet');
+module.exports.pg = require('./pg');

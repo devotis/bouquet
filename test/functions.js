@@ -20,6 +20,9 @@ tape('functions', t => {
         mailjet: {
             index: ['connect', 'send'],
         },
+        pg: {
+            index: ['pgp', 'toLocalsForPostgraphile'],
+        },
     };
 
     // iterate over submodules

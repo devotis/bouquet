@@ -1,9 +1,12 @@
 const createError = require('http-errors');
 const listEndpoints = require('express-list-endpoints');
 const logger = require('../logger');
+const { toLocalsForPostgraphile } = require('../pg');
 
-const isDevelopment = process.env.NODE_ENV !== 'production';
-const port = process.env.PORT || 5000;
+const { DATABASE_URL, NODE_ENV, PORT } = process.env;
+
+const isDevelopment = NODE_ENV !== 'production';
+const port = PORT || 5000;
 
 const errorHandling = server => {
     logger.info('bouquet/express > setup error handling');
@@ -39,6 +42,67 @@ const errorHandling = server => {
     });
 };
 
+const postgraphile = (
+    server,
+    // config with defaults
+    {
+        schemaName = 'app',
+        mountPath = '/api/postgraphile',
+        application_name = 'bouquet',
+        getRole = req => `app_${req.user ? req.user.role : 'anonymous'}`,
+    } = {}
+) => {
+    server.use(
+        mountPath,
+        postgraphile(`${DATABASE_URL}?ssl=true`, schemaName, {
+            dynamicJson: true,
+            showErrorStack: isDevelopment,
+            watchPg: isDevelopment,
+            graphiql: isDevelopment,
+            enhanceGraphiql: isDevelopment,
+            appendPlugins: [
+                require('@graphile-contrib/pg-simplify-inflector'),
+                require('postgraphile-plugin-connection-filter'),
+            ],
+            extendedErrors: isDevelopment
+                ? [
+                      'severity',
+                      'code',
+                      'detail',
+                      'hint',
+                      'position',
+                      'internalPosition',
+                      'internalQuery',
+                      'where',
+                      'schema',
+                      'table',
+                      'column',
+                      'dataType',
+                      'constraint',
+                      'file',
+                      'line',
+                      'routine',
+                  ]
+                : ['hint', 'detail', 'errcode'],
+            // You just need to generate JWT tokens for your users...,
+            // or use _pgSettings_ to indicate the current user.
+            // https://www.graphile.org/postgraphile/usage-library/#pgsettings-function
+            pgSettings: async req => {
+                // similar to server/functions/queryAsRole.js
+                const role = getRole(req);
+                // pgDefaultRole zou ingesteld moeten zijn als app_anonymous
+                // als geen pgSettings gebruikt zou worden
+
+                return {
+                    role,
+                    application_name, // https://github.com/graphile/postgraphile/issues/499#issuecomment-413259134
+                    ...toLocalsForPostgraphile(req),
+                };
+            },
+        })
+    );
+};
+
 const startServer = server => {
     logger.info('bouquet/express > starting server');
 
@@ -54,5 +118,6 @@ const startServer = server => {
 
 module.exports = {
     setupErrorHandling: errorHandling,
+    setupPostgraphile: postgraphile,
     setupStartServer: startServer,
 };

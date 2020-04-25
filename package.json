@@ -14,12 +14,17 @@
         "test": "node ./test"
     },
     "dependencies": {
+        "@graphile-contrib/pg-simplify-inflector": "^6.0.0",
         "csurf": "1.11.0",
         "express-list-endpoints": "4.0.1",
         "heroku-logger": "0.3.3",
         "http-errors": "1.7.3",
         "mssql": "6.2.0",
         "node-mailjet": "3.3.1",
+        "pg-monitor": "^1.4.0",
+        "pg-promise": "^10.5.2",
+        "postgraphile": "^4.6.0",
+        "postgraphile-plugin-connection-filter": "^1.1.3",
         "useragent": "2.3.0"
     },
     "devDependencies": {
