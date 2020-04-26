@@ -26,8 +26,14 @@ const query = async (text, params) => {
 };
 
 const getClient = async () => {
-    const client = await pool.connect();
-    //  (err, client, release) => {
+    let client;
+    try {
+        client = await pool.connect();
+    } catch (err) {
+        logger.error('bouquet/pg > connection Failed! Bad Config: ', err);
+        throw err;
+    }
+
     const query = client.query;
     // monkey patch the query method to keep track of the last query executed
     client.query = async (...args) => {
