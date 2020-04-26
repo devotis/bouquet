@@ -2,9 +2,10 @@ const tape = require('tape');
 const httpMocks = require('node-mocks-http');
 const uuidv4 = require('uuid/v4');
 
+const getRole = req => `app_${req.user ? req.user.roleName : 'anonymous'}`;
+
 tape('logger', async t => {
     const {
-        valueSafeForSet,
         getSettingsFromRequest,
         getSqlSettingsQuery,
     } = require('../src/pg/_private');
@@ -15,25 +16,46 @@ tape('logger', async t => {
         'x-forwarded-for': '1.1.1.1',
     };
     const url = 'https://example.com/user/42';
+    const q = {
+        string: 'simple',
+        datum: new Date(),
+        zero: 0,
+        number: 1,
+        bool: true,
+        bool2: false,
+        obj: { x: '123' },
+        emptyobj: {},
+        arr: [1, 2, 3],
+        emptyarr: [],
+        nul: null,
+        undef: undefined,
+        "inje'ction": "Isn't injected",
+    };
     const getRequest = httpMocks.createRequest({
         method: 'GET',
         url,
         params: {
             id: 42,
         },
-        query: {
-            a: 'qwe',
-            "b'b": {},
-            c: "rt'y",
-        },
+        query: q,
         headers: reqHeaders,
         options: { proto: 'https' },
     });
 
-    const result = await queryWithContext(
-        getRequest,
-        `SELECT now() as nu22, current_setting('request.header.x-request-id') as nu33`
-    );
+    const sql = [
+        'SELECT now() as "now"',
+        ...Object.keys(q).map(
+            key =>
+                `, current_setting('request.query.${key.replace(
+                    /'/g,
+                    "''"
+                )}', true) as "${key}"`
+        ),
+    ].join('\n');
+
+    console.log(sql);
+
+    const result = await queryWithContext(getRequest, getRole, sql);
 
     // const settings = getSettingsFromRequest(
     //     getRequest,
@@ -72,7 +94,7 @@ tape('logger', async t => {
     //     }
     // }
 
-    console.log(result);
+    console.log(result.rows);
 
     t.end();
 });

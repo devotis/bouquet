@@ -70,29 +70,38 @@ const getClient = async () => {
     return [client, release];
 };
 
-const queryWithContext = async (req, ...args) => {
+const queryWithContext = async (req, getRole, ...args) => {
+    const role = typeof getRole === 'string' ? getRole : getRole(req);
+
     const settings = getSettingsFromRequest(
         req,
         ['headers', 'query', 'body', 'session'],
-        { timezone: 'Europe/Amsterdam' }
+        { timezone: 'Europe/Amsterdam', role }
     );
-    console.log(settings);
 
     const sqlSettingsQuery = getSqlSettingsQuery(settings);
-    console.log(sqlSettingsQuery);
 
     const [pgClient, release] = await getClient();
     await pgClient.query('begin');
 
     let result;
 
+    console.log({
+        role,
+        role2: pgClient.escapeIdentifier(role),
+        sqlSettingsQuery,
+    });
+
     try {
+        await pgClient.query(`set role ${pgClient.escapeIdentifier(role)}`);
         // If there is at least one local setting, load it into the database.
-        await pgClient.query(sqlSettingsQuery);
+        if (sqlSettingsQuery) {
+            await pgClient.query(sqlSettingsQuery);
+        }
 
         result = await pgClient.query.apply(pgClient, args);
     } catch (err) {
-        console.error(err);
+        logger.error('bouquet/pg > error executing query', err, args);
     } finally {
         // Cleanup our Postgres client by ending the transaction and releasing
         // the client back to the pool. Always do this even if the query fails.
@@ -120,30 +129,7 @@ const queryAsRole = async (
 
     queryCounter++;
 
-    const locals = [
-        // pgp.as.format(`set local "role" = $<appRole>;`),
-        ...Object.entries(req.headers || {}).map(([key, value]) =>
-            pgp.as.format(
-                `set local "request.header.$<key:value>" = $<value>;`,
-                {
-                    key,
-                    value: valueSafeForSet(value),
-                }
-            )
-        ),
-        ...Object.entries(req.user || {}).map(([key, value]) =>
-            pgp.as.format(`set local "request.user.$<key:value>" = $<value>;`, {
-                key,
-                value: valueSafeForSet(value),
-            })
-        ),
-        pgp.as.format(`set local "request.session.id" = $<sessionID>;`, {
-            sessionID: valueSafeForSet(req.sessionID),
-        }),
-        pgp.as.format(`set local "request.client.id" = $<clientId>;`, {
-            clientId: valueSafeForSet(clientId),
-        }),
-    ].join('\n');
+    appRole;
 
     logger.info(
         `[Query ${queryCounter}] set role ${appRole} and expect ${dbMethod} with ${query} and locals: ${JSON.stringify(
