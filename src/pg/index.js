@@ -114,18 +114,8 @@ const queryWithContext = async (req, getRole, ...args) => {
     return result;
 };
 
-// const doBlock = query =>
-//     db.any(
-//         sql`
-//         do $do$ begin
-//             ${query}
-//         end $do$;
-//     `
-//     );
-
 module.exports = {
     getClient,
     query,
     queryWithContext,
-    // doBlock,
 };
