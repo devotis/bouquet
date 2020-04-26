@@ -31,20 +31,17 @@ const getSettingsFromRequest = (
     which = ['headers', 'user', 'query', 'session'],
     additionalSettingsHash = {}
 ) => {
-    const settings = which.reduce(
-        (acc, part) => {
-            acc.push(
-                ...Object.entries(req[part] || {}).map(([key, value]) => [
-                    `request.${part.replace('headers', 'header')}.${key}`,
-                    value,
-                ])
-            );
-            return acc;
-        },
-        Object.entries(additionalSettingsHash).map(([key, value]) => [
-            key,
-            value,
-        ])
+    const additionalSettings = Object.entries(
+        additionalSettingsHash
+    ).map(([key, value]) => [key, value]);
+
+    const settings = which.flatMap(
+        part =>
+            Object.entries(req[part] || {}).map(([key, value]) => [
+                `request.${part.replace('headers', 'header')}.${key}`,
+                value,
+            ]),
+        additionalSettings
     );
 
     return settings;
