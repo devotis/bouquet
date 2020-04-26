@@ -1,14 +1,10 @@
 const logger = require('../logger');
-const {
-    valueSafeForSet,
-    getSettingsFromRequest,
-    getSqlSettingsQuery,
-} = require('./_private');
+const { getSettingsFromRequest, getSqlSettingsQuery } = require('./_private');
 
 const { Pool } = require('pg');
 const pool = new Pool();
 
-pool.on('error', (err, client) => {
+pool.on('error', (err /*, client*/) => {
     logger.error('bouquet/pg > unexpected error on idle client', err);
     process.exit(-1);
 });
@@ -52,10 +48,8 @@ const getClient = async () => {
     // set a timeout of 5 seconds, after which we will log this client's last query
     const timeout = setTimeout(() => {
         logger.error(
-            'bouquet/pg > a client has been checked out for more than 5 seconds!'
-        );
-        logger.error(
-            `bouquet/pg > the last executed query on this client was: ${client.lastQuery}`
+            'bouquet/pg > a client has been checked out for more than 5 seconds!',
+            { lastQuery: client.lastQuery }
         );
     }, 5000);
     const release = err => {
@@ -79,18 +73,18 @@ const queryWithContext = async (req, getRole, ...args) => {
         { timezone: 'Europe/Amsterdam', role }
     );
 
+    logger.info(`bouquet/pg > error executing queryWithContext`, {
+        role,
+        args,
+        settings,
+    });
+
     const sqlSettingsQuery = getSqlSettingsQuery(settings);
 
     const [pgClient, release] = await getClient();
     await pgClient.query('begin');
 
     let result;
-
-    console.log({
-        role,
-        role2: pgClient.escapeIdentifier(role),
-        sqlSettingsQuery,
-    });
 
     try {
         await pgClient.query(`set role ${pgClient.escapeIdentifier(role)}`);
@@ -114,45 +108,6 @@ const queryWithContext = async (req, getRole, ...args) => {
     return result;
 };
 
-let queryCounter = 0;
-
-const queryAsRole = async (
-    req,
-    query,
-    params,
-    dbMethod = 'one',
-    systemRole
-) => {
-    const appRole = systemRole
-        ? systemRole
-        : `app_${req.user ? req.user.roleName : 'anonymous'}`;
-
-    queryCounter++;
-
-    appRole;
-
-    logger.info(
-        `[Query ${queryCounter}] set role ${appRole} and expect ${dbMethod} with ${query} and locals: ${JSON.stringify(
-            locals
-        )} and params: ${JSON.stringify(params)}`
-    );
-    const result = await db[dbMethod](
-        sql`
-            -- queryAsRole
-            set role $<appRole:name>;
-            ${locals}
-            ${query}
-        `,
-        {
-            appRole,
-            ...params,
-        }
-    );
-    logger.info(`[Query ${1}] results: ${JSON.stringify(result)}`);
-
-    return result;
-};
-
 // const doBlock = query =>
 //     db.any(
 //         sql`
@@ -163,9 +118,8 @@ const queryAsRole = async (
 //     );
 
 module.exports = {
-    query,
     getClient,
-    queryAsRole,
+    query,
     queryWithContext,
     // doBlock,
 };

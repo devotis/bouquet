@@ -53,8 +53,6 @@ tape('logger', async t => {
         ),
     ].join('\n');
 
-    console.log(sql);
-
     const result = await queryWithContext(getRequest, getRole, sql);
 
     // const settings = getSettingsFromRequest(
