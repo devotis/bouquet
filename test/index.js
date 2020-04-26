@@ -1,3 +1,3 @@
-// require('./functions');
-// require('./logger');
+require('./functions');
+require('./logger');
 require('./pg');

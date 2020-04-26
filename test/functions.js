@@ -21,7 +21,7 @@ tape('functions', t => {
             index: ['connect', 'send'],
         },
         pg: {
-            index: ['pgp', 'toLocalsForPostgraphile'],
+            index: ['getClient', 'query', 'queryWithContext'],
         },
     };
 
