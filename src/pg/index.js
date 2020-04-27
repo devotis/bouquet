@@ -11,12 +11,13 @@ pool.on('error', (err /*, client*/) => {
 
 // https://node-postgres.com/guides/project-structure
 const query = async (text, params) => {
+    logger.info('bouquet/pg > executing query');
     const start = Date.now();
 
     const result = await pool.query(text, params);
 
     const duration = Date.now() - start;
-    logger.info('bouquet/pg > executed query', {
+    logger.info('bouquet/pg > query completed', {
         text,
         duration,
         rows: result.rowCount,
@@ -26,24 +27,26 @@ const query = async (text, params) => {
 };
 
 const getClient = async () => {
+    logger.info('bouquet/pg > getting client from pool');
     let client;
     try {
         client = await pool.connect();
     } catch (err) {
-        logger.error('bouquet/pg > connection Failed! Bad Config: ', err);
+        logger.error('bouquet/pg > failed to connect ', err);
         throw err;
     }
 
     const query = client.query;
     // monkey patch the query method to keep track of the last query executed
     client.query = async (...args) => {
+        logger.info('bouquet/pg > executing query', { ...args });
         client.lastQuery = args;
 
         const start = Date.now();
         const result = await query.apply(client, args);
 
         const duration = Date.now() - start;
-        logger.info('bouquet/pg > executed query', {
+        logger.info('bouquet/pg > query completed', {
             ...args,
             duration,
             rows: result.rowCount,
