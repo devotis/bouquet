@@ -1,7 +1,7 @@
 const createError = require('http-errors');
 const listEndpoints = require('express-list-endpoints');
 const logger = require('../logger');
-const { toLocalsForPostgraphile } = require('../pg');
+const { getPgSettingsFromReq } = require('../pg/_private');
 
 const { DATABASE_URL, NODE_ENV, PORT } = process.env;
 
@@ -87,17 +87,17 @@ const postgraphile = (
             // You just need to generate JWT tokens for your users...,
             // or use _pgSettings_ to indicate the current user.
             // https://www.graphile.org/postgraphile/usage-library/#pgsettings-function
-            pgSettings: async req => {
-                // similar to server/functions/queryAsRole.js
-                const role = getRole(req);
+            pgSettings: req => {
                 // pgDefaultRole zou ingesteld moeten zijn als app_anonymous
                 // als geen pgSettings gebruikt zou worden
 
-                return {
-                    role,
-                    application_name, // https://github.com/graphile/postgraphile/issues/499#issuecomment-413259134
-                    ...toLocalsForPostgraphile(req),
-                };
+                // https://github.com/graphile/postgraphile/issues/499#issuecomment-413259134
+                return getPgSettingsFromReq(
+                    req,
+                    ['headers', 'user', 'query', 'session'],
+                    getRole,
+                    { application_name }
+                );
             },
         })
     );

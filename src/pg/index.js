@@ -1,5 +1,9 @@
 const logger = require('../logger');
-const { getSettingsFromRequest, getSqlSettingsQuery } = require('./_private');
+const {
+    getPgSettingsFromReq,
+    getSettingsForPgClientTransaction,
+    getSqlSettingsQuery,
+} = require('./_private');
 
 const { Pool } = require('pg');
 const pool = new Pool();
@@ -74,21 +78,20 @@ const getClient = async () => {
 };
 
 const queryWithContext = async (req, getRole, ...args) => {
-    const role = typeof getRole === 'string' ? getRole : getRole(req);
-
-    const settings = getSettingsFromRequest(
+    const pgSettings = getPgSettingsFromReq(
         req,
         ['headers', 'query', 'body', 'session'],
-        { timezone: 'Europe/Amsterdam', role }
+        getRole,
+        { timezone: 'Europe/Amsterdam' }
     );
 
-    logger.info(`bouquet/pg > error executing queryWithContext`, {
-        role,
-        args,
-        settings,
+    logger.info(`bouquet/pg > executing queryWithContext`, pgSettings);
+
+    const { role: pgRole, localSettings } = getSettingsForPgClientTransaction({
+        pgSettings,
     });
 
-    const sqlSettingsQuery = getSqlSettingsQuery(settings);
+    const sqlSettingsQuery = getSqlSettingsQuery(localSettings);
 
     const [pgClient, release] = await getClient();
     await pgClient.query('begin');
@@ -96,7 +99,7 @@ const queryWithContext = async (req, getRole, ...args) => {
     let result;
 
     try {
-        await pgClient.query(`set role ${pgClient.escapeIdentifier(role)}`);
+        await pgClient.query(`set role ${pgClient.escapeIdentifier(pgRole)}`);
         // If there is at least one local setting, load it into the database.
         if (sqlSettingsQuery) {
             await pgClient.query(sqlSettingsQuery);

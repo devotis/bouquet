@@ -26,25 +26,47 @@ const getConnectionString = (
     return connectionString;
 };
 
-const getSettingsFromRequest = (
+const getPgSettingsFromReq = (
     req,
     which = ['headers', 'user', 'query', 'session'],
-    additionalSettingsHash = {}
+    getRole,
+    defaultSettings = {}
 ) => {
-    const additionalSettings = Object.entries(
-        additionalSettingsHash
-    ).map(([key, value]) => [key, value]);
+    const settings = {
+        role: typeof getRole === 'string' ? getRole : getRole(req),
+        ...defaultSettings,
+    };
 
-    const settings = which.flatMap(
-        part =>
-            Object.entries(req[part] || {}).map(([key, value]) => [
-                `request.${part.replace('headers', 'header')}.${key}`,
-                value,
-            ]),
-        additionalSettings
+    which.forEach(part =>
+        Object.entries(req[part] || {}).forEach(([key, value]) => {
+            settings[
+                `request.${part.replace('headers', 'header')}.${key}`
+            ] = value;
+        })
     );
 
     return settings;
+};
+
+const getSettingsForPgClientTransaction = ({ pgSettings }) => {
+    let role,
+        localSettings = [];
+    if (pgSettings && typeof pgSettings === 'object') {
+        for (const key in pgSettings) {
+            if (
+                Object.prototype.hasOwnProperty.call(pgSettings, key)
+                // && isPgSettingValid(pgSettings[key])
+            ) {
+                if (key === 'role') {
+                    role = pgSettings[key];
+                } else {
+                    localSettings.push([key, pgSettings[key]]);
+                }
+            }
+        }
+    }
+
+    return { role, localSettings };
 };
 
 // compiled from https://github.com/graphile/postgraphile/blob/51bd1dc96de194f75fdb1759e0ce9f555b2cf82b/src/postgraphile/withPostGraphileContext.ts
@@ -82,5 +104,6 @@ const getSqlSettingsQuery = localSettings => {
 module.exports = {
     getConnectionString,
     getSqlSettingsQuery,
-    getSettingsFromRequest,
+    getPgSettingsFromReq,
+    getSettingsForPgClientTransaction,
 };
