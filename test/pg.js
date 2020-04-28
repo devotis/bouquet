@@ -155,6 +155,7 @@ tape('pg > integration', async t => {
         sql,
         connect,
         query: pgQuery,
+        queryAsRole,
         queryWithContext,
     } = require('../src/pg');
     const escape = pg.Client.prototype.escapeIdentifier;
@@ -179,24 +180,6 @@ tape('pg > integration', async t => {
         query
     );
 
-    t.deepEqual(result1.rows, [
-        {
-            current_user: 'app_anonymous',
-            string: 'simple',
-            zero: '0',
-            number: '1',
-            bool: 'true',
-            bool2: 'false',
-            obj: '{"x":"123"}',
-            emptyobj: '{}',
-            arr: '[1,2,3]',
-            emptyarr: '[]',
-            nul: '',
-            undef: '',
-            "inje'ction": "Isn't injected",
-        },
-    ]);
-
     const result2 = await queryWithContext(
         req,
         ['headers', 'user', 'query', 'session'],
@@ -209,8 +192,48 @@ tape('pg > integration', async t => {
         'select current_user as user, txid_current() as tx'
     );
 
-    t.equal(result2.rows[0].user, 'app_anonymous');
-    t.equal(result3.rows[0].user, process.env.PGUSER);
+    const result4 = await queryAsRole(
+        'app_anonymous',
+        'select current_user as user, txid_current() as tx'
+    );
+
+    t.deepEqual(
+        result1.rows,
+        [
+            {
+                current_user: 'app_anonymous',
+                string: 'simple',
+                zero: '0',
+                number: '1',
+                bool: 'true',
+                bool2: 'false',
+                obj: '{"x":"123"}',
+                emptyobj: '{}',
+                arr: '[1,2,3]',
+                emptyarr: '[]',
+                nul: '',
+                undef: '',
+                "inje'ction": "Isn't injected",
+            },
+        ],
+        'queryWithContext > correct current_settings'
+    );
+
+    t.equal(
+        result2.rows[0].user,
+        'app_anonymous',
+        'queryWithContext > correct current_user'
+    );
+    t.equal(
+        result3.rows[0].user,
+        process.env.PGUSER,
+        'query > correct current_user'
+    );
+    t.equal(
+        result4.rows[0].user,
+        'app_anonymous',
+        'queryAsRole > correct current_user'
+    );
 
     t.end();
 });

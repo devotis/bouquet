@@ -117,6 +117,32 @@ const query = async (text, params) => {
     return result;
 };
 
+const queryAsRole = async (role, ...args) => {
+    const [pgClient, release] = await getClient();
+    await pgClient.query('begin');
+
+    let result;
+
+    try {
+        await pgClient.query(
+            `set local role ${pgClient.escapeIdentifier(role)}`
+        );
+
+        result = await pgClient.query.apply(pgClient, args);
+    } catch (err) {
+        logger.error('bouquet/pg > error executing query', err, args);
+    } finally {
+        // Cleanup our Postgres client by ending the transaction and releasing
+        // the client back to the pool. Always do this even if the query fails.
+        try {
+            await pgClient.query('commit');
+        } finally {
+            release();
+        }
+    }
+    return result;
+};
+
 const queryWithContext = async (
     req,
     reqParts,
@@ -173,6 +199,7 @@ module.exports = {
     connect,
     getClient,
     query,
+    queryAsRole,
     queryWithContext,
     sql: SQL,
 };

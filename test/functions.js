@@ -26,6 +26,7 @@ tape('functions', t => {
                 'connect',
                 'getClient',
                 'query',
+                'queryAsRole',
                 'queryWithContext',
                 'sql',
             ],
