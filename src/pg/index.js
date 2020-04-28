@@ -60,7 +60,7 @@ const getClient = async () => {
     }
 
     const query = client.query;
-    client.id = uuidv4();
+    client.id = client.id || uuidv4();
 
     logger.info('bouquet/pg > got new client from pool', {
         clientId: client.id,
