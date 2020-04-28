@@ -1,3 +1,4 @@
+const { Pool } = require('pg');
 const logger = require('../logger');
 const {
     getPgSettingsFromReq,
@@ -5,13 +6,46 @@ const {
     getSqlSettingsQuery,
 } = require('./_private');
 
-const { Pool } = require('pg');
-const pool = new Pool();
+let pool;
 
-pool.on('error', (err /*, client*/) => {
-    logger.error('bouquet/pg > unexpected error on idle client', err);
-    process.exit(-1);
-});
+const { env } = process;
+
+const getConnectionString = ({
+    userKey = 'PGUSER',
+    passwordKey = 'PGPASSWORD',
+    hostKey = 'PGHOST',
+    dbKey = 'PGDATABASE',
+    applicationName = 'bouquet',
+}) => {
+    const connectionString = [
+        'postgres://',
+        env[userKey],
+        ':',
+        env[passwordKey],
+        '@',
+        env[hostKey],
+        '/',
+        env[dbKey],
+        '?ssl=true&application_name=',
+        applicationName,
+    ].join('');
+
+    return connectionString;
+};
+
+const connect = config => {
+    if (pool) {
+        logger.info('bouquet/pg > pool already connected');
+        return;
+    }
+    pool = new Pool(config);
+    logger.info('bouquet/pg > pool connected');
+
+    pool.on('error', (err /*, client*/) => {
+        logger.error('bouquet/pg > unexpected error on idle client', err);
+        process.exit(-1);
+    });
+};
 
 // https://node-postgres.com/guides/project-structure
 const query = async (text, params) => {
@@ -77,12 +111,18 @@ const getClient = async () => {
     return [client, release];
 };
 
-const queryWithContext = async (req, getRole, ...args) => {
+const queryWithContext = async (
+    req,
+    reqParts,
+    getRole,
+    defaultSettings,
+    ...args
+) => {
     const pgSettings = getPgSettingsFromReq(
         req,
-        ['headers', 'query', 'body', 'session'],
+        reqParts,
         getRole,
-        { timezone: 'Europe/Amsterdam' }
+        defaultSettings
     );
 
     logger.info(`bouquet/pg > executing queryWithContext`, pgSettings);
@@ -121,6 +161,8 @@ const queryWithContext = async (req, getRole, ...args) => {
 };
 
 module.exports = {
+    getConnectionString,
+    connect,
     getClient,
     query,
     queryWithContext,

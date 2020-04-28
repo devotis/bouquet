@@ -21,7 +21,13 @@ tape('functions', t => {
             index: ['connect', 'send'],
         },
         pg: {
-            index: ['getClient', 'query', 'queryWithContext'],
+            index: [
+                'getConnectionString',
+                'connect',
+                'getClient',
+                'query',
+                'queryWithContext',
+            ],
         },
     };
 

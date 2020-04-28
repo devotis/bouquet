@@ -49,6 +49,7 @@ const postgraphile = (
         schemaName = 'app',
         mountPath = '/api/postgraphile',
         application_name = 'bouquet',
+        reqParts = ['headers', 'user', 'query', 'session'],
         getRole = req => `app_${req.user ? req.user.role : 'anonymous'}`,
     } = {}
 ) => {
@@ -92,12 +93,9 @@ const postgraphile = (
                 // als geen pgSettings gebruikt zou worden
 
                 // https://github.com/graphile/postgraphile/issues/499#issuecomment-413259134
-                return getPgSettingsFromReq(
-                    req,
-                    ['headers', 'user', 'query', 'session'],
-                    getRole,
-                    { application_name }
-                );
+                return getPgSettingsFromReq(req, reqParts, getRole, {
+                    application_name,
+                });
             },
         })
     );

@@ -1,34 +1,9 @@
 require('dotenv').config();
 const sql = require('pg-sql2');
 
-const { env } = process;
-
-const getConnectionString = (
-    userKey = 'PGUSER',
-    passwordKey = 'PGPASSWORD',
-    hostKey = 'PGHOST',
-    dbKey = 'PGDATABASE',
-    applicationName = 'bouquet'
-) => {
-    const connectionString = [
-        'postgres://',
-        env[userKey],
-        ':',
-        env[passwordKey],
-        '@',
-        env[hostKey],
-        '/',
-        env[dbKey],
-        '?ssl=true&application_name=',
-        applicationName,
-    ].join('');
-
-    return connectionString;
-};
-
 const getPgSettingsFromReq = (
     req,
-    which = ['headers', 'user', 'query', 'session'],
+    reqParts = ['headers', 'user', 'query', 'session'],
     getRole,
     defaultSettings = {}
 ) => {
@@ -37,7 +12,7 @@ const getPgSettingsFromReq = (
         ...defaultSettings,
     };
 
-    which.forEach(part =>
+    reqParts.forEach(part =>
         Object.entries(req[part] || {}).forEach(([key, value]) => {
             settings[
                 `request.${part.replace('headers', 'header')}.${key}`
@@ -102,7 +77,6 @@ const getSqlSettingsQuery = localSettings => {
 };
 
 module.exports = {
-    getConnectionString,
     getSqlSettingsQuery,
     getPgSettingsFromReq,
     getSettingsForPgClientTransaction,

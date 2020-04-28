@@ -9,7 +9,12 @@ tape('logger', async t => {
         getSettingsFromRequest,
         getSqlSettingsQuery,
     } = require('../src/pg/_private');
-    const { query, getClient, queryWithContext } = require('../src/pg');
+    const {
+        connect,
+        query,
+        getClient,
+        queryWithContext,
+    } = require('../src/pg');
 
     const reqHeaders = {
         'x-request-id': uuidv4(),
@@ -52,7 +57,15 @@ tape('logger', async t => {
         ),
     ].join('\n');
 
-    const result = await queryWithContext(getRequest, getRole, sql);
+    connect();
+
+    const result = await queryWithContext(
+        getRequest,
+        ['headers', 'user', 'query', 'session'],
+        getRole,
+        {},
+        sql
+    );
 
     t.deepEqual(result.rows, [
         {
