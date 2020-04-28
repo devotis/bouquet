@@ -1,6 +1,13 @@
 require('dotenv').config();
 const sql = require('pg-sql2');
 
+const valueSafeForSet = value =>
+    value == null // of undefined dus
+        ? ''
+        : typeof value === 'object'
+        ? JSON.stringify(value)
+        : value;
+
 const getPgSettingsFromReq = (
     req,
     reqParts = ['headers', 'user', 'query', 'session'],
@@ -16,7 +23,7 @@ const getPgSettingsFromReq = (
         Object.entries(req[part] || {}).forEach(([key, value]) => {
             settings[
                 `request.${part.replace('headers', 'header')}.${key}`
-            ] = value;
+            ] = valueSafeForSet(value);
         })
     );
 
