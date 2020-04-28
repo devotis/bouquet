@@ -1,4 +1,4 @@
-const postgraphile = require('postgraphile');
+const { postgraphile } = require('postgraphile');
 const createError = require('http-errors');
 const listEndpoints = require('express-list-endpoints');
 const logger = require('../logger');
