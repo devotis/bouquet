@@ -17,6 +17,7 @@
         "@graphile-contrib/pg-simplify-inflector": "^6.0.0",
         "csurf": "1.11.0",
         "express-list-endpoints": "4.0.1",
+        "graphile-build-pg": "4.7.0",
         "heroku-logger": "0.3.3",
         "http-errors": "1.7.3",
         "mssql": "6.2.0",

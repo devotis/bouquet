@@ -1422,6 +1422,22 @@ graphile-build-pg@4.6.0:
     pg-sql2 "4.5.0"
     postgres-interval "^1.2.0"
 
+graphile-build-pg@4.7.0:
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/graphile-build-pg/-/graphile-build-pg-4.7.0.tgz#6ee86e0623bad433c61812119ac22aa420788841"
+  integrity sha512-dwGV+wUoPbly9RP9WgShs6yPv8A4N/xhdHGFu9sxYn49qkwJaAEdFehgsdCl12ZvJYpe/eDyK/6jR5PQOhJDbw==
+  dependencies:
+    "@graphile/lru" "4.5.0"
+    chalk "^2.4.2"
+    debug "^4.1.1"
+    graphile-build "4.7.0"
+    graphql-iso-date "^3.6.0"
+    jsonwebtoken "^8.5.1"
+    lodash ">=4 <5"
+    lru-cache ">=4 <5"
+    pg-sql2 "4.7.0"
+    postgres-interval "^1.2.0"
+
 graphile-build@4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/graphile-build/-/graphile-build-4.6.0.tgz#04480c86779be2070deeaceea245cb6acf65f716"
@@ -1431,6 +1447,21 @@ graphile-build@4.6.0:
     chalk "^2.4.2"
     debug "^4.1.1"
     graphql-parse-resolve-info "4.5.0"
+    iterall "^1.2.2"
+    lodash ">=4 <5"
+    lru-cache "^5.0.0"
+    pluralize "^7.0.0"
+    semver "^6.0.0"
+
+graphile-build@4.7.0:
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/graphile-build/-/graphile-build-4.7.0.tgz#138ebd706f6418dcec08b7301c769267bf242a24"
+  integrity sha512-zoh5KItIj40bZnHLEh1G6zAN6C0hmJkKVYsQUEZUeX4Ex80YoX9eFO8rI7LwMumPASJf4nmjlziksLY1+1cn6g==
+  dependencies:
+    "@graphile/lru" "4.5.0"
+    chalk "^2.4.2"
+    debug "^4.1.1"
+    graphql-parse-resolve-info "4.7.0"
     iterall "^1.2.2"
     lodash ">=4 <5"
     lru-cache "^5.0.0"
@@ -1454,6 +1485,13 @@ graphql-parse-resolve-info@4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/graphql-parse-resolve-info/-/graphql-parse-resolve-info-4.5.0.tgz#cb9bf800c9ce81eebecd86ec62182a7b645d1fad"
   integrity sha512-51eKipZcj9AQWKLtstAmqys3GmOHUoUwFN/ALe1s4k2his0sP4ASri/ZdqcweLRnno4cDPqp2dcWnJ/Pe2a2rQ==
+  dependencies:
+    debug "^4.1.1"
+
+graphql-parse-resolve-info@4.7.0:
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/graphql-parse-resolve-info/-/graphql-parse-resolve-info-4.7.0.tgz#0f769684f5430f9d14964fb7dea56fbfaf54953f"
+  integrity sha512-vrfvITs1vQCmzasAnfpzjTnImfo1gSwBijJEo6PF+0ZP3cLgJsmsNBvc9VJaiXxdjShS6sWI4V7HTrlz+UjGGw==
   dependencies:
     debug "^4.1.1"
 
@@ -2381,6 +2419,15 @@ pg-sql2@4.6.0-alpha.0:
   integrity sha512-oZ3SqsKSEXHBaJTaQomFiIZ3FTqv1UHhWResOLTYiRWr9/n4mE+oHQx9Tx7bPn+k9LQmXV/HzlhN05jb1vSjMw==
   dependencies:
     "@graphile/lru" "4.6.0-alpha.0"
+    "@types/pg" ">=6 <8"
+    debug ">=3 <5"
+
+pg-sql2@4.7.0:
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/pg-sql2/-/pg-sql2-4.7.0.tgz#2e4964bc0d94b8a81e4bc13651379a6436f8e370"
+  integrity sha512-/9YtclLJW7nIehd4RPxCECz9+mOAmQ5tkDRLbefzCxgctkKj31tsF6Xu1+Rwnnv7/hKyzH+ShzOJrxPRF8jEAw==
+  dependencies:
+    "@graphile/lru" "4.5.0"
     "@types/pg" ">=6 <8"
     debug ">=3 <5"
 
