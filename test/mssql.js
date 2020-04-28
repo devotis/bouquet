@@ -1,13 +1,25 @@
+process.env.DEBUG = 'mssql:*';
 if (process.env.NODE_ENV !== 'production') require('dotenv').config();
 
-const { connect, query, close } = require('../src/mssql');
+const tape = require('tape');
 
-connect();
+tape('mssql > integration', async t => {
+    const { connect, query, close } = require('../src/mssql');
 
-const run = async () => {
-    const result = await query('select 1 as');
-    console.log(result);
+    connect();
+    const result = await query('select 1 as x');
     close();
-};
 
-run();
+    t.deepEqual(
+        result,
+        {
+            recordsets: [[{ x: 1 }]],
+            recordset: [{ x: 1 }],
+            output: {},
+            rowsAffected: [1],
+        },
+        'query > correct output'
+    );
+
+    t.end();
+});
