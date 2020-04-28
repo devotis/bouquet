@@ -138,7 +138,9 @@ const queryWithContext = async (
     let result;
 
     try {
-        await pgClient.query(`set role ${pgClient.escapeIdentifier(pgRole)}`);
+        await pgClient.query(
+            `set local role ${pgClient.escapeIdentifier(pgRole)}`
+        );
         // If there is at least one local setting, load it into the database.
         if (sqlSettingsQuery) {
             await pgClient.query(sqlSettingsQuery);
