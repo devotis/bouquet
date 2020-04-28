@@ -1,6 +1,7 @@
 const { Pool } = require('pg');
 const SQL = require('sql-template-strings');
 const uuidv4 = require('uuid/v4');
+const { performance } = require('perf_hooks');
 
 const logger = require('../logger');
 const {
@@ -71,11 +72,11 @@ const getClient = async () => {
         client.lastQuery = args;
         client.lastQueryId = uuidv4();
 
-        const start = Date.now();
+        const start = performance.now();
 
         const result = await query.apply(client, args);
 
-        const duration = Date.now() - start;
+        const duration = `${Math.round(performance.now() - start)}ms`;
         logger.info('bouquet/pg > query completed', {
             clientId: client.id,
             queryId: client.lastQueryId,
