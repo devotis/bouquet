@@ -149,7 +149,7 @@ tape('pg > unit', async t => {
     t.end();
 });
 
-tape('logger', async t => {
+tape('pg > integration', async t => {
     const { connect, queryWithContext } = require('../src/pg');
 
     const { req, query } = getRequest();
