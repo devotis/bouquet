@@ -25,6 +25,71 @@ const {
 } = require('@devotis/bouquet/mssql');
 ```
 
+### pg
+
+Functions to execute queries as a role and local settings from the Express request object.
+
+#### With postgraphile as middleware
+
+```javascript
+const express = require('express');
+const {
+    connect,
+    setupPostgraphile,
+    errorHandling,
+    startServer,
+} = require('@devotis/bouquet/express');
+
+const server = express();
+const poolPg = connect();
+
+// ...
+setupPostgraphile(server, {
+    pool: poolPg,
+    schemaName: 'app',
+    mountPath: '/api/postgraphile',
+    reqParts = ['headers', 'user', 'query', 'session'],
+    getRole: req => `app_${req.user ? req.user.roleName : 'anonymous'}`,
+    defaultSettings: {
+        application_name: 'bouquet',
+        timezone: 'Europe/Amsterdam',
+    },
+});
+// ...
+setupErrorHandling(server);
+setupStartServer(server);
+```
+
+#### Without postgraphile
+
+You can query as a role with local settings without postgraphile as well.
+
+```javascript
+const express = require('express');
+const { sql, queryWithContext } = require('@devotis/bouquet/express');
+
+// ...
+const routeHandler = async (req, res, next) => {
+    const result = await queryWithContext(
+        req,
+        ['headers', 'user', 'query', 'session'],
+        req => `app_${req.user ? req.user.roleName : 'anonymous'}`,
+        {
+            application_name: 'bouquet',
+            timezone: 'Europe/Amsterdam',
+        },
+        sql`
+            select t.*
+            from app.my_table t
+            where t.id = ${req.params.id}
+              and t.creator_id = current_setting('request.user.id', true)
+        `
+    );
+
+    res.json(result);
+};
+```
+
 ### express
 
 Functions and middleware to be used with Express.
