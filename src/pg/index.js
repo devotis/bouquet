@@ -26,7 +26,7 @@ const getConnectionString = ({
         env[hostKey],
         '/',
         env[dbKey],
-        '?ssl=true&application_name=',
+        '?application_name=',
         applicationName,
     ].join('');
 
