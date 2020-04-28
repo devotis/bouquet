@@ -1,3 +1,4 @@
+const pg = require('pg');
 const tape = require('tape');
 const httpMocks = require('node-mocks-http');
 
@@ -150,20 +151,18 @@ tape('pg > unit', async t => {
 });
 
 tape('pg > integration', async t => {
-    const { connect, queryWithContext } = require('../src/pg');
+    const { sql, connect, queryWithContext } = require('../src/pg');
+    const escape = pg.Client.prototype.escapeIdentifier;
 
-    const { req, query } = getRequest();
+    const { req, query: reqQuery } = getRequest();
 
-    const sql = [
-        'SELECT current_user',
-        ...Object.keys(query).map(
-            key =>
-                `, current_setting('request.query.${key.replace(
-                    /'/g,
-                    "''"
-                )}', true) as "${key}"`
-        ),
-    ].join('\n');
+    const query = sql`SELECT current_user`;
+
+    Object.keys(reqQuery).forEach(key => {
+        query
+            .append(sql`, current_setting(${'request.query.' + key}, true) as `)
+            .append(escape(key));
+    });
 
     connect();
 
@@ -172,7 +171,7 @@ tape('pg > integration', async t => {
         ['headers', 'user', 'query', 'session'],
         getRole,
         {},
-        sql
+        query
     );
 
     t.deepEqual(result.rows, [
