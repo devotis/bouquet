@@ -22,7 +22,6 @@
         "mssql": "6.2.0",
         "node-mailjet": "3.3.1",
         "pg": "8.0.3",
-        "pg-monitor": "^1.4.0",
         "pg-sql2": "4.6.0-alpha.0",
         "postgraphile": "^4.6.0",
         "postgraphile-plugin-connection-filter": "^1.1.3",
