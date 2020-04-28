@@ -4,7 +4,7 @@ const listEndpoints = require('express-list-endpoints');
 const logger = require('../logger');
 const { getPgSettingsFromReq } = require('../pg/_private');
 
-const { DATABASE_URL, NODE_ENV, PORT } = process.env;
+const { NODE_ENV, PORT } = process.env;
 
 const isDevelopment = NODE_ENV !== 'production';
 const port = PORT || 5000;
