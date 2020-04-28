@@ -1,5 +1,7 @@
 const { Pool } = require('pg');
 const SQL = require('sql-template-strings');
+const uuidv4 = require('uuid/v4');
+
 const logger = require('../logger');
 const {
     getPgSettingsFromReq,
@@ -48,24 +50,7 @@ const connect = config => {
     return pool;
 };
 
-// https://node-postgres.com/guides/project-structure
-const query = async (text, params) => {
-    const start = Date.now();
-
-    const result = await pool.query(text, params);
-
-    const duration = Date.now() - start;
-    logger.info('bouquet/pg > query completed', {
-        text,
-        duration,
-        rows: result.rowCount,
-    });
-
-    return result;
-};
-
 const getClient = async () => {
-    logger.info('bouquet/pg > getting client from pool');
     let client;
     try {
         client = await pool.connect();
@@ -75,18 +60,28 @@ const getClient = async () => {
     }
 
     const query = client.query;
+    client.id = uuidv4();
+
+    logger.info('bouquet/pg > got new client from pool', {
+        clientId: client.id,
+    });
+
     // monkey patch the query method to keep track of the last query executed
     client.query = async (...args) => {
         client.lastQuery = args;
+        client.lastQueryId = uuidv4();
 
         const start = Date.now();
+
         const result = await query.apply(client, args);
 
         const duration = Date.now() - start;
         logger.info('bouquet/pg > query completed', {
-            ...args,
+            clientId: client.id,
+            queryId: client.lastQueryId,
             duration,
-            rows: result.rowCount,
+            rowCount: result && result.rowCount,
+            ...args,
         });
 
         return result;
@@ -105,9 +100,21 @@ const getClient = async () => {
         clearTimeout(timeout);
         // set the query method back to its old un-monkey-patched version
         client.query = query;
+        logger.info('bouquet/pg > client released', {
+            clientId: client.id,
+            lastQueryId: client.lastQueryId,
+        });
     };
 
     return [client, release];
+};
+// https://node-postgres.com/guides/project-structure
+const query = async (text, params) => {
+    const [pgClient, release] = await getClient();
+    const result = await pgClient.query(text, params);
+    release();
+
+    return result;
 };
 
 const queryWithContext = async (
