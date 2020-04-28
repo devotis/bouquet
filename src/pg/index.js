@@ -1,4 +1,5 @@
 const { Pool } = require('pg');
+const SQL = require('sql-template-strings');
 const logger = require('../logger');
 const {
     getPgSettingsFromReq,
@@ -9,7 +10,6 @@ const {
 let pool;
 
 const { env } = process;
-
 const getConnectionString = ({
     userKey = 'PGUSER',
     passwordKey = 'PGPASSWORD',
@@ -167,4 +167,5 @@ module.exports = {
     getClient,
     query,
     queryWithContext,
+    sql: SQL,
 };

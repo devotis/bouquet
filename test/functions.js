@@ -27,6 +27,7 @@ tape('functions', t => {
                 'getClient',
                 'query',
                 'queryWithContext',
+                'sql',
             ],
         },
     };
