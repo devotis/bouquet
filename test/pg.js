@@ -151,7 +151,12 @@ tape('pg > unit', async t => {
 });
 
 tape('pg > integration', async t => {
-    const { sql, connect, queryWithContext } = require('../src/pg');
+    const {
+        sql,
+        connect,
+        query: pgQuery,
+        queryWithContext,
+    } = require('../src/pg');
     const escape = pg.Client.prototype.escapeIdentifier;
 
     const { req, query: reqQuery } = getRequest();
@@ -166,7 +171,7 @@ tape('pg > integration', async t => {
 
     connect();
 
-    const result = await queryWithContext(
+    const result1 = await queryWithContext(
         req,
         ['headers', 'user', 'query', 'session'],
         getRole,
@@ -174,7 +179,7 @@ tape('pg > integration', async t => {
         query
     );
 
-    t.deepEqual(result.rows, [
+    t.deepEqual(result1.rows, [
         {
             current_user: 'app_anonymous',
             string: 'simple',
@@ -191,6 +196,21 @@ tape('pg > integration', async t => {
             "inje'ction": "Isn't injected",
         },
     ]);
+
+    const result2 = await queryWithContext(
+        req,
+        ['headers', 'user', 'query', 'session'],
+        getRole,
+        {},
+        'select current_user as user, txid_current() as tx'
+    );
+
+    const result3 = await pgQuery(
+        'select current_user as user, txid_current() as tx'
+    );
+
+    t.equal(result2.rows[0].user, 'app_anonymous');
+    t.equal(result3.rows[0].user, process.env.PGUSER);
 
     t.end();
 });
