@@ -56,6 +56,13 @@ const setupPostgraphile = (
         defaultSettings = {},
     } = {}
 ) => {
+    logger.info('bouquet/express > mounting postgraphile', {
+        schemaName,
+        mountPath,
+        reqParts,
+        defaultSettings,
+    });
+
     server.use(
         mountPath,
         postgraphile(pool || databaseUrl, schemaName, {
