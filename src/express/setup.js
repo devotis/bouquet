@@ -1,3 +1,4 @@
+const postgraphile = require('postgraphile');
 const createError = require('http-errors');
 const listEndpoints = require('express-list-endpoints');
 const logger = require('../logger');
@@ -42,7 +43,7 @@ const errorHandling = server => {
     });
 };
 
-const postgraphile = (
+const setupPostgraphile = (
     server,
     // config with defaults
     {
@@ -116,6 +117,6 @@ const startServer = server => {
 
 module.exports = {
     setupErrorHandling: errorHandling,
-    setupPostgraphile: postgraphile,
+    setupPostgraphile,
     setupStartServer: startServer,
 };
