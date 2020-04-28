@@ -1,6 +1,20 @@
 const sql = require('mssql');
 const logger = require('./logger');
-
+/**
+ * What is a called a pool of *connections* in node-mssql is called a pool of *clients* in node-postgres.
+ *
+ * ## node-mssql
+ * "When a query request is created, the SQL client uses the next available connection in the pool.
+ * After the query is executed, the connection is returned to the connection to the pool."
+ * https://developer.okta.com/blog/2019/03/11/node-sql-server
+ *
+ * ## node-Postgres
+ * pool.connect acquires a client from the pool. If the pool is 'full' and all clients are currently checked out,
+ * this will wait in a FIFO queue until a client becomes available by it being released back to the pool.
+ * If there are idle clients in the pool it will be returned to the callback on process.nextTick.
+ * If the pool is not full a new client will be created & returned to this callback.
+ * https://node-postgres.com/api/pool
+ */
 const {
     MSSQL_WEB_USER: user,
     MSSQL_WEB_PASSWORD: password,
@@ -38,10 +52,17 @@ const poolPromise = new Promise((resolve, reject) => {
         });
         cp = new sql.ConnectionPool(config);
 
+        cp.on('error', (err /*, client*/) => {
+            logger.error('bouquet/mssql > pool connection error', err);
+            process.exit(-1);
+        });
+
         cp.connect()
             .then(pool => {
                 // note that the resolved `pool` is the same thing as `cp`
                 // pool === cp > true
+                // this is different from node-postgres where pool.connect resolves
+                // to a new client
                 const { password, ...rest } = pool.config;
                 logger.info('bouquet/mssql > connected', rest);
                 resolve(pool);
