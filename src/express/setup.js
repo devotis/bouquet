@@ -47,6 +47,8 @@ const setupPostgraphile = (
     server,
     // config with defaults
     {
+        pool,
+        databaseUrl,
         schemaName = 'app',
         mountPath = '/api/postgraphile',
         reqParts = ['headers', 'user', 'query', 'session'],
@@ -56,7 +58,7 @@ const setupPostgraphile = (
 ) => {
     server.use(
         mountPath,
-        postgraphile(`${DATABASE_URL}?ssl=true`, schemaName, {
+        postgraphile(pool || databaseUrl, schemaName, {
             dynamicJson: true,
             showErrorStack: isDevelopment,
             watchPg: isDevelopment,

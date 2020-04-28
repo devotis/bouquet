@@ -45,6 +45,7 @@ const connect = config => {
         logger.error('bouquet/pg > unexpected error on idle client', err);
         process.exit(-1);
     });
+    return pool;
 };
 
 // https://node-postgres.com/guides/project-structure
