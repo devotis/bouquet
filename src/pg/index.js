@@ -103,6 +103,7 @@ const getClient = async () => {
         logger.info('bouquet/pg > client released', {
             clientId: client.id,
             lastQueryId: client.lastQueryId,
+            err,
         });
     };
 
@@ -136,8 +137,9 @@ const queryAsRole = async (role, ...args) => {
         // the client back to the pool. Always do this even if the query fails.
         try {
             await pgClient.query('commit');
-        } finally {
             release();
+        } catch (err) {
+            release(err);
         }
     }
     return result;
