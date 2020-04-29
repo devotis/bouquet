@@ -15,7 +15,11 @@ tape('functions', t => {
                 'ensureCsrfProtected',
                 'ensureTraceProtected',
             ],
-            setup: ['setupErrorHandling', 'setupStartServer'],
+            setup: [
+                'setupErrorHandling',
+                'setupPostgraphile',
+                'setupStartServer',
+            ],
         },
         mailjet: {
             index: ['connect', 'send'],
