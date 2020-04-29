@@ -153,6 +153,7 @@ tape('pg > unit', async t => {
 tape('pg > integration', async t => {
     const {
         sql,
+        connect,
         query: pgQuery,
         queryAsRole,
         queryWithContext,
@@ -231,6 +232,36 @@ tape('pg > integration', async t => {
         'app_anonymous',
         'queryAsRole > correct current_user'
     );
+
+    try {
+        await queryWithContext(
+            req,
+            ['headers', 'user', 'query', 'session'],
+            getRole,
+            {},
+            'select 1 as'
+        );
+    } catch (err) {
+        t.equal(
+            err.message,
+            'syntax error at end of input',
+            'queryWithContext > throws'
+        );
+    }
+    try {
+        await pgQuery('select 1 as');
+    } catch (err) {
+        t.equal(err.message, 'syntax error at end of input', 'query > throws');
+    }
+    try {
+        await queryAsRole('app_anonymous', 'select 1 as');
+    } catch (err) {
+        t.equal(
+            err.message,
+            'syntax error at end of input',
+            'queryAsRole > throws'
+        );
+    }
 
     t.end();
 });
