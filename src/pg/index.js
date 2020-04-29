@@ -68,6 +68,9 @@ const connect = config => {
 };
 
 const getClient = async () => {
+    if (!pool) {
+        connect();
+    }
     let client;
     try {
         client = await pool.connect();

@@ -153,7 +153,6 @@ tape('pg > unit', async t => {
 tape('pg > integration', async t => {
     const {
         sql,
-        connect,
         query: pgQuery,
         queryAsRole,
         queryWithContext,
@@ -169,8 +168,6 @@ tape('pg > integration', async t => {
             .append(sql`, current_setting(${'request.query.' + key}, true) as `)
             .append(escape(key));
     });
-
-    connect();
 
     const result1 = await queryWithContext(
         req,
