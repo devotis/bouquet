@@ -1,4 +1,5 @@
 const sql = require('mssql');
+const { performance } = require('perf_hooks');
 const logger = require('./logger');
 /**
  * What is a called a pool of *connections* in node-mssql is called a pool of *clients* in node-postgres.
@@ -96,6 +97,7 @@ const query = async (sql, title) => {
     const pool = await poolPromise;
     let result;
 
+    const start = performance.now();
     try {
         result = await pool.query(sql);
     } catch (err) {
@@ -105,10 +107,12 @@ const query = async (sql, title) => {
         });
         throw err;
     }
+    const duration = `${Math.round(performance.now() - start)}ms`;
 
     logger.info('bouquet/mssql > query completed', {
         no,
         title,
+        duration,
         recordsets: result.recordsets.length,
         records: result.recordsets.map(recordset => recordset.length),
         rowsAffected: result.rowsAffected,
