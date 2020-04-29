@@ -35,7 +35,23 @@ const getConnectionString = ({
 
     return connectionString;
 };
-
+/**
+ * As per https://node-postgres.com/features/connecting
+ * you can leave config undefined and the new pool will connect using PGUSER, PGHOST etc env variables.
+ *
+ * Or you can provide
+ * {
+ *   user: 'dbuser',
+ *   host: 'database.server.com',
+ *   database: 'mydb',
+ *   password: 'secretpassword',
+ *   port: 3211,
+ * }
+ * Or you can provide
+ * {
+ *   connectionString: 'postgresql://dbuser:secretpassword@database.server.com:3211/mydb',
+ * }
+ */
 const connect = config => {
     if (pool) {
         logger.info('bouquet/pg > pool already connected');
