@@ -22,7 +22,7 @@ const {
     tag,
     cp, // the connection pool for raw usage with for example:
     mssql, // const request = new mssql.Request(cp);
-} = require('@devotis/bouquet/mssql');
+} = require('@devotis/bouquet').mssql;
 ```
 
 ### pg
@@ -38,7 +38,7 @@ const {
     setupPostgraphile,
     errorHandling,
     startServer,
-} = require('@devotis/bouquet/express');
+} = require('@devotis/bouquet').express;
 
 const server = express();
 const poolPg = connect();
@@ -66,7 +66,7 @@ You can query as a role with local settings without postgraphile as well.
 
 ```javascript
 const express = require('express');
-const { sql, queryWithContext } = require('@devotis/bouquet/express');
+const { sql, queryWithContext } = require('@devotis/bouquet').pg;
 
 // ...
 const routeHandler = async (req, res, next) => {
@@ -102,7 +102,7 @@ const {
     ensureTraceProtected,
     setupStartServer,
     setupErrorHandling,
-} = require('@devotis/bouquet/express');
+} = require('@devotis/bouquet').express;
 ```
 
 ### logger
@@ -110,7 +110,7 @@ const {
 All same as the logfmt based [heroku-logger](https://github.com/ianstormtaylor/heroku-logger), but allows logging an error object along with context-specific error message ([issues](https://github.com/ianstormtaylor/heroku-logger/issues/15)) and the express req object
 
 ```javascript
-const logger = require('@devotis/bouquet/logger');
+const logger = require('@devotis/bouquet').logger;
 
 const error = new Error('x');
 
@@ -125,7 +125,7 @@ logger.error('Custom error message', error, req);
 ### mailjet
 
 ```javascript
-const { connect, send } = require('@devotis/bouquet/mailjet');
+const { connect, send } = require('@devotis/bouquet').mailjet;
 
 connect();
 
