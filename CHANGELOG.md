@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2020-04-24
+
+### Added
+
+-   Postgres support
+-   Mssql pool error logging
+-   Mssql log query duration
+-   Mssql tests
+
 ## [1.1.1] - 2020-04-24
 
 ### Changed
