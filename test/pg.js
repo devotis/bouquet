@@ -49,7 +49,12 @@ tape('pg > unit', async t => {
     const { req, requestId } = getRequest();
 
     // Make an object with settings
-    const pgSettings = getPgSettingsFromReq(req, undefined, getRole, undefined);
+    const pgSettings = getPgSettingsFromReq(
+        req,
+        ['headers', 'user', 'query', 'session', 'fullUrl', 'method'],
+        getRole,
+        undefined
+    );
 
     // convert it to a role and localSettings that is an array of key-value arrays
     const { role: pgRole, localSettings } = getSettingsForPgClientTransaction({
@@ -77,6 +82,8 @@ tape('pg > unit', async t => {
             'request.query.nul': '',
             'request.query.undef': '',
             "request.query.inje'ction": "Isn't injected",
+            'request.fullUrl': 'https://example.com/user/42',
+            'request.method': 'GET',
         },
         'getPgSettingsFromReq > converts a express req object to an object that could be fed as pgSettings to postgraphile'
     );
@@ -103,13 +110,15 @@ tape('pg > unit', async t => {
             ['request.query.nul', ''],
             ['request.query.undef', ''],
             ["request.query.inje'ction", "Isn't injected"],
+            ['request.fullUrl', 'https://example.com/user/42'],
+            ['request.method', 'GET'],
         ],
         'getSettingsForPgClientTransaction > also converts the pgSettings object to an an array of key-value arrays'
     );
 
     t.equal(
         sqlSettingsQuery.text,
-        'select set_config($1, $2, true), set_config($3, $4, true), set_config($5, $6, true), set_config($7, $8, true), set_config($9, $10, true), set_config($11, $12, true), set_config($13, $14, true), set_config($15, $16, true), set_config($17, $18, true), set_config($19, $20, true), set_config($21, $22, true), set_config($23, $24, true), set_config($25, $26, true), set_config($27, $28, true)',
+        'select set_config($1, $2, true), set_config($3, $4, true), set_config($5, $6, true), set_config($7, $8, true), set_config($9, $10, true), set_config($11, $12, true), set_config($13, $14, true), set_config($15, $16, true), set_config($17, $18, true), set_config($19, $20, true), set_config($21, $22, true), set_config($23, $24, true), set_config($25, $26, true), set_config($27, $28, true), set_config($29, $30, true), set_config($31, $32, true)',
         'sqlSettingsQuery > creates a parameterized query'
     );
     t.deepEqual(
@@ -143,6 +152,10 @@ tape('pg > unit', async t => {
             '',
             "request.query.inje'ction",
             "Isn't injected",
+            'request.fullUrl',
+            'https://example.com/user/42',
+            'request.method',
+            'GET',
         ],
         'sqlSettingsQuery > with the parameters'
     );

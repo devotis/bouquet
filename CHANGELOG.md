@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.2] - 2020-05-06
+
+### Added
+
+-   Allow also string parts of the request like originalUrl, method (and one bonus peroperty fullUrl) to be added to the pg settings
+
 ## [1.2.1] - 2020-05-06
 
 ### Changed

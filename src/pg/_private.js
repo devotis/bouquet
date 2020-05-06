@@ -1,5 +1,6 @@
 require('dotenv').config();
 const sql = require('pg-sql2');
+const url = require('url');
 
 const valueSafeForSet = value =>
     value == null // of undefined dus
@@ -19,13 +20,28 @@ const getPgSettingsFromReq = (
         ...defaultSettings,
     };
 
-    reqParts.forEach(part =>
-        Object.entries(req[part] || {}).forEach(([key, value]) => {
+    reqParts.forEach(part => {
+        const value =
+            part === 'fullUrl'
+                ? url.format({
+                      protocol: req.protocol,
+                      host: req.get('host'),
+                      pathname: req.originalUrl,
+                  })
+                : req[part];
+        const valueType = typeof value;
+
+        if (valueType === 'string' || valueType === 'boolean') {
+            settings[`request.${part}`] = value;
+            return;
+        }
+
+        Object.entries(value || {}).forEach(([key, value]) => {
             settings[
                 `request.${part.replace('headers', 'header')}.${key}`
             ] = valueSafeForSet(value);
-        })
-    );
+        });
+    });
 
     return settings;
 };
