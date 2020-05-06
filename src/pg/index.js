@@ -1,6 +1,6 @@
 const { Pool } = require('pg');
 const SQL = require('sql-template-strings');
-const uuidv4 = require('uuid/v4');
+const { v4: uuidv4 } = require('uuid');
 const { performance } = require('perf_hooks');
 
 const logger = require('../logger');
