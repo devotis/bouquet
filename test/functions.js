@@ -6,7 +6,16 @@ tape('functions', t => {
             index: ['info', 'warn', 'error', 'debug'],
         },
         mssql: {
-            mssql: ['connect', 'query', 'close', 'all', 'one', 'tag'],
+            mssql: [
+                'connect',
+                'query',
+                'close',
+                'all',
+                'one',
+                'tag',
+                'cp',
+                'mssql',
+            ],
         },
         express: {
             utils: ['getRemoteAddress'],
@@ -40,16 +49,27 @@ tape('functions', t => {
     // iterate over submodules
     Object.entries(expected).forEach(([submodule, value]) => {
         const actualFns = Object.keys(require(`../src/${submodule}`));
+
         // iterate over expected files/folders in submodules
         Object.entries(value).forEach(([folder, arr]) => {
             // iterate over its expected functions
             arr.forEach(expectedFnName => {
+                const foundIndex = actualFns.indexOf(expectedFnName);
                 t.ok(
-                    actualFns.includes(expectedFnName),
+                    foundIndex > -1,
                     `bouquet/${submodule} exports function "${expectedFnName}" (in ${folder})`
                 );
+                actualFns.splice(foundIndex, 1);
             });
         });
+
+        t.equal(
+            actualFns.length,
+            0,
+            `bouquet/${submodule} also exports these unexpected functions: ${actualFns.join(
+                ', '
+            )}`
+        );
     });
 
     t.end();

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   Test that only the expected functions are exported and not more
+
 ## [1.2.2] - 2020-05-06
 
 ### Added
@@ -20,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   [Doc] show how you should actually require the submodules in readme
 
 ### Fixed
+
 -   Error package subpath './v4' is not defined by "exports" in /.../node_modules/uuid/package.json
 
 ## [1.2.0] - 2020-04-24
