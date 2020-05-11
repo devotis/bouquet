@@ -48,14 +48,7 @@ setupPostgraphile(server, {
     pool: poolPg,
     schemaName: 'app',
     mountPath: '/api/postgraphile',
-    reqParts = [
-      'headers',
-      'user',
-      'query',
-      'session',
-      'method',
-      'fullUrl'
-    ],
+    reqParts: ['headers', 'user', 'query', 'session', 'method', 'fullUrl'],
     getRole: req => `app_${req.user ? req.user.roleName : 'anonymous'}`,
     defaultSettings: {
         application_name: 'bouquet',
@@ -79,14 +72,14 @@ const { sql, queryWithContext } = require('@devotis/bouquet').pg;
 const routeHandler = async (req, res, next) => {
     const result = await queryWithContext(
         req,
-        reqParts = [
-          'headers',
-          'user',
-          'query',
-          'session',
-          'method',
-          'fullUrl'
-        ],
+        (reqParts = [
+            'headers',
+            'user',
+            'query',
+            'session',
+            'method',
+            'fullUrl',
+        ]),
         req => `app_${req.user ? req.user.roleName : 'anonymous'}`,
         {
             application_name: 'bouquet',
