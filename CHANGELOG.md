@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Test that only the expected functions are exported and not more
 
+### Fixed
+
+-   request.session.id not available with 'session' as the req parts
+
 ## [1.2.2] - 2020-05-06
 
 ### Added

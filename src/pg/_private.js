@@ -36,6 +36,10 @@ const getPgSettingsFromReq = (
             return;
         }
 
+        if (part === 'session') {
+            // because session.id is not found via Object.entries
+            settings[`request.session.id`] = valueSafeForSet(req.sessionID);
+        }
         Object.entries(value || {}).forEach(([key, value]) => {
             settings[
                 `request.${part.replace('headers', 'header')}.${key}`
