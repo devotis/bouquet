@@ -5,9 +5,9 @@ const logger = require('../logger');
 
 const makeLogger = type => arg0 => {
     if (arg0 instanceof Error) {
-        logger.error(`bouquet>express > redis ${type}`, arg0);
+        logger.error(`bouquet/express > redis ${type}`, arg0);
     } else {
-        logger.info(`bouquet>express > redis ${type}`);
+        logger.info(`bouquet/express > redis ${type}`);
     }
 };
 
