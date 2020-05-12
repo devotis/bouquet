@@ -30,10 +30,11 @@ const retry_strategy = options => {
     return Math.min(options.attempt * 100, 3000);
 };
 
-const getRedisStore = () => {
+const getRedisStore = (options = {}) => {
     const client = redis.createClient({
         url: process.env.REDIS_URL,
         retry_strategy,
+        ...options,
     });
     client.unref();
 
