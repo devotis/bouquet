@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   Wrapper for creating a redisStore fast with built in retry and logging
+
 ## [1.2.3] - 2020-05-11
 
 ### Added

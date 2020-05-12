@@ -1,5 +1,6 @@
 module.exports = {
     ...require('./middleware'),
-    ...require('./utils'),
+    ...require('./session'),
     ...require('./setup'),
+    ...require('./utils'),
 };

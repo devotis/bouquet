@@ -24,6 +24,7 @@ tape('functions', t => {
                 'ensureCsrfProtected',
                 'ensureTraceProtected',
             ],
+            session: ['session', 'getRedisStore'],
             setup: [
                 'setupErrorHandling',
                 'setupPostgraphile',

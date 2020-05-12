@@ -38,10 +38,30 @@ const {
     setupPostgraphile,
     errorHandling,
     startServer,
+    getRedisStore,
 } = require('@devotis/bouquet').express;
 
 const server = express();
 const poolPg = connect();
+
+const isSecureCookie = process.env.NODE_ENV === 'production';
+const ONE_MONTH = 31 * 24 * 60 * 60 * 1000;
+server.use(
+    session({
+        name: 'session',
+        store: getRedisStore(),
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: true,
+        proxy: isSecureCookie, // needed when behind a reverse proxy for secure cookies
+        cookie: {
+            path: '/',
+            httpOnly: true,
+            secure: isSecureCookie,
+            maxAge: ONE_MONTH,
+        },
+    })
+);
 
 // ...
 setupPostgraphile(server, {
