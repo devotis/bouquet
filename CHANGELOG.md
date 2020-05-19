@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.3] - 2020-05-19
+
+### Added
+
+-   Allow adding the req object to logger.info/warn/debug for additional info about the request
+
 ## [1.3.2] - 2020-05-19
 
 ### Added

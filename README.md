@@ -148,6 +148,12 @@ logger.error(error, req); // req is the express req object.
 logger.error('Custom error message', error);
 logger.error('Custom error message', error, { some, additional, info });
 logger.error('Custom error message', error, req);
+
+// Also log a few bits of info on the req object
+logger.info('Some message', req);
+
+// Log a lot of information on the req object
+logger.debug('Some message', req);
 ```
 
 ### mailjet

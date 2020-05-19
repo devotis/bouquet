@@ -1,5 +1,5 @@
 const logger = require('heroku-logger');
-const { makeErrorArguments } = require('./_private');
+const { makeErrorArguments, makeOtherArguments } = require('./_private');
 
 // Log an error object along with context-specific error message #15
 // https://github.com/ianstormtaylor/heroku-logger/issues/15
@@ -18,9 +18,25 @@ const error = (one, two = {}, three = {}) => {
     return logger.error.apply(logger, args);
 };
 
+const debug = (one, two = {}) => {
+    const args = makeOtherArguments(one, two, 'debug');
+
+    return logger.debug.apply(logger, args);
+};
+const info = (one, two = {}) => {
+    const args = makeOtherArguments(one, two, 'info');
+
+    return logger.info.apply(logger, args);
+};
+const warn = (one, two = {}) => {
+    const args = makeOtherArguments(one, two, 'warn');
+
+    return logger.warn.apply(logger, args);
+};
+
 module.exports = {
-    debug: logger.debug,
-    info: logger.info,
-    warn: logger.warn,
+    debug,
+    info,
+    warn,
     error,
 };

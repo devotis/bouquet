@@ -6,7 +6,7 @@ const sortMessageFirstAndStackLast = (a, b) =>
     // sort `message` as first and `stack` as last one
     a === 'stack' ? 1 : b === 'stack' ? -1 : a === 'message' ? -1 : 0;
 
-const getInfoOfObject = (obj = {}) => {
+const getInfoOfObject = (obj = {}, level) => {
     if (obj instanceof Error) {
         // it is an Error instance
         return [
@@ -24,6 +24,20 @@ const getInfoOfObject = (obj = {}) => {
     }
     if (obj.originalUrl) {
         // it is an Express request object
+        if (level === 'info') {
+            // return just a few parts of the req object
+            return [
+                'req',
+                {
+                    'request-id': obj.headers['x-request-id'], // https://brandur.org/request-ids
+                    ip: getRemoteAddress(obj),
+                    method: obj.method,
+                    originalUrl: obj.originalUrl,
+                    auth: obj.isAuthenticated && obj.isAuthenticated(),
+                },
+            ];
+        }
+        // return a lot of req parts for debugging
         return [
             'req',
             {
@@ -55,8 +69,8 @@ const getInfoOfObject = (obj = {}) => {
 
 const makeErrorArguments = (one, two = {}, three = {}) => {
     // convert Error instance to object
-    const [twoType, twoInfo] = getInfoOfObject(two);
-    const [threeType, threeInfo] = getInfoOfObject(three);
+    const [twoType, twoInfo] = getInfoOfObject(two, 'error');
+    const [threeType, threeInfo] = getInfoOfObject(three, 'error');
 
     // Add info only when it's there
     const allInfo = {};
@@ -74,8 +88,16 @@ const makeErrorArguments = (one, two = {}, three = {}) => {
     ];
 };
 
+const makeOtherArguments = (one, two, level) => {
+    // convert Error instance to object
+    const [, twoInfo] = getInfoOfObject(two, level);
+
+    return [one, twoInfo];
+};
+
 module.exports = {
     sortMessageFirstAndStackLast,
     getInfoOfObject,
     makeErrorArguments,
+    makeOtherArguments,
 };
