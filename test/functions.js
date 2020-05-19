@@ -22,6 +22,7 @@ tape('functions', t => {
             middleware: [
                 'ensureAuthenticated',
                 'ensureCsrfProtected',
+                'ensureNocache',
                 'ensureTraceProtected',
             ],
             session: ['session', 'getRedisStore'],

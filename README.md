@@ -126,6 +126,7 @@ const {
     getRemoteAddress,
     ensureAuthenticated,
     ensureCsrfProtected,
+    ensureNocache,
     ensureTraceProtected,
     setupStartServer,
     setupErrorHandling,

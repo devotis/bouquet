@@ -21,6 +21,18 @@ const ensureCsrfProtected = (req, res, next) => {
     }
 };
 
+const ensureNocache = (req, res, next) => {
+    // zoals https://github.com/helmetjs/nocache
+    res.setHeader('Surrogate-Control', 'no-store');
+    res.setHeader(
+        'Cache-Control',
+        'no-store, no-cache, must-revalidate, proxy-revalidate'
+    );
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    next();
+};
+
 const ensureTraceProtected = (req, res, next) => {
     if (withProtection && req.method === 'TRACE') {
         return next(createError(405, 'server.405'));
@@ -31,5 +43,6 @@ const ensureTraceProtected = (req, res, next) => {
 module.exports = {
     ensureAuthenticated,
     ensureCsrfProtected,
+    ensureNocache,
     ensureTraceProtected,
 };
