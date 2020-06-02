@@ -9,9 +9,12 @@ const {
 
 let mailjet;
 
-const connect = () => {
+const connect = (
+    public_key = MJ_APIKEY_GT_PUBLIC,
+    private_key = MJ_APIKEY_GT_PRIVATE
+) => {
     logger.info('bouquet/mailjet > connecting', { version: MJ_VERSION });
-    mailjet = Mailjet.connect(MJ_APIKEY_GT_PUBLIC, MJ_APIKEY_GT_PRIVATE);
+    mailjet = Mailjet.connect(public_key, private_key);
 };
 
 // https://stackoverflow.com/questions/286141/remove-blank-attributes-from-an-object-in-javascript
