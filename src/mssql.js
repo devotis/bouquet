@@ -72,6 +72,8 @@ const poolPromise = new Promise((resolve, reject) => {
                 logger.error('bouquet/mssql > failed to connect ', err);
                 reject(err);
             });
+
+        return poolPromise;
     };
 });
 let queryCounter = 0;
