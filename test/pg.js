@@ -82,6 +82,7 @@ tape('pg > unit', async t => {
             'request.query.nul': '',
             'request.query.undef': '',
             "request.query.inje'ction": "Isn't injected",
+            'request.session.id': '',
             'request.fullUrl': 'https://example.com/user/42',
             'request.method': 'GET',
         },
@@ -110,6 +111,7 @@ tape('pg > unit', async t => {
             ['request.query.nul', ''],
             ['request.query.undef', ''],
             ["request.query.inje'ction", "Isn't injected"],
+            ['request.session.id', ''],
             ['request.fullUrl', 'https://example.com/user/42'],
             ['request.method', 'GET'],
         ],
@@ -118,7 +120,7 @@ tape('pg > unit', async t => {
 
     t.equal(
         sqlSettingsQuery.text,
-        'select set_config($1, $2, true), set_config($3, $4, true), set_config($5, $6, true), set_config($7, $8, true), set_config($9, $10, true), set_config($11, $12, true), set_config($13, $14, true), set_config($15, $16, true), set_config($17, $18, true), set_config($19, $20, true), set_config($21, $22, true), set_config($23, $24, true), set_config($25, $26, true), set_config($27, $28, true), set_config($29, $30, true), set_config($31, $32, true)',
+        'select set_config($1, $2, true), set_config($3, $4, true), set_config($5, $6, true), set_config($7, $8, true), set_config($9, $10, true), set_config($11, $12, true), set_config($13, $14, true), set_config($15, $16, true), set_config($17, $18, true), set_config($19, $20, true), set_config($21, $22, true), set_config($23, $24, true), set_config($25, $26, true), set_config($27, $28, true), set_config($29, $30, true), set_config($31, $32, true), set_config($33, $34, true)',
         'sqlSettingsQuery > creates a parameterized query'
     );
     t.deepEqual(
@@ -152,6 +154,8 @@ tape('pg > unit', async t => {
             '',
             "request.query.inje'ction",
             "Isn't injected",
+            'request.session.id',
+            '',
             'request.fullUrl',
             'https://example.com/user/42',
             'request.method',
