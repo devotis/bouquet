@@ -1,6 +1,6 @@
 const tape = require('tape');
 
-tape('functions', t => {
+tape('functions', (t) => {
     const expected = {
         logger: {
             index: ['info', 'warn', 'error', 'debug'],
@@ -55,7 +55,7 @@ tape('functions', t => {
         // iterate over expected files/folders in submodules
         Object.entries(value).forEach(([folder, arr]) => {
             // iterate over its expected functions
-            arr.forEach(expectedFnName => {
+            arr.forEach((expectedFnName) => {
                 const foundIndex = actualFns.indexOf(expectedFnName);
                 t.ok(
                     foundIndex > -1,

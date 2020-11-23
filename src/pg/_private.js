@@ -2,7 +2,7 @@ require('dotenv').config();
 const sql = require('pg-sql2');
 const url = require('url');
 
-const valueSafeForSet = value =>
+const valueSafeForSet = (value) =>
     value == null // of undefined dus
         ? ''
         : typeof value === 'object'
@@ -20,7 +20,7 @@ const getPgSettingsFromReq = (
         ...defaultSettings,
     };
 
-    reqParts.forEach(part => {
+    reqParts.forEach((part) => {
         const value =
             part === 'fullUrl'
                 ? url.format({
@@ -72,7 +72,7 @@ const getSettingsForPgClientTransaction = ({ pgSettings }) => {
 };
 
 // compiled from https://github.com/graphile/postgraphile/blob/51bd1dc96de194f75fdb1759e0ce9f555b2cf82b/src/postgraphile/withPostGraphileContext.ts
-const getSqlSettingsQuery = localSettings => {
+const getSqlSettingsQuery = (localSettings) => {
     const sqlSettings = [];
     if (!localSettings.length) return null;
 

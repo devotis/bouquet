@@ -3,7 +3,7 @@ const httpMocks = require('node-mocks-http');
 const uuidv4 = require('uuid/v4');
 const querystring = require('querystring');
 
-tape('logger > error', t => {
+tape('logger > error', (t) => {
     const {
         getInfoOfObject,
         makeErrorArguments,
@@ -184,7 +184,7 @@ tape('logger > error', t => {
     t.end();
 });
 
-tape('logger > others', t => {
+tape('logger > others', (t) => {
     const {
         getInfoOfObject,
         makeOtherArguments,

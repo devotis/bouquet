@@ -2,7 +2,7 @@ const pg = require('pg');
 const tape = require('tape');
 const httpMocks = require('node-mocks-http');
 
-const getRole = req => `app_${req.user ? req.user.roleName : 'anonymous'}`;
+const getRole = (req) => `app_${req.user ? req.user.roleName : 'anonymous'}`;
 
 const getRequest = () => {
     const requestId = '9357880a-3d7f-49f0-8232-30f4426e9913';
@@ -39,7 +39,7 @@ const getRequest = () => {
     return { headers, query, req, requestId };
 };
 
-tape('pg > unit', async t => {
+tape('pg > unit', async (t) => {
     const {
         getSqlSettingsQuery,
         getPgSettingsFromReq,
@@ -167,7 +167,7 @@ tape('pg > unit', async t => {
     t.end();
 });
 
-tape('pg > integration', async t => {
+tape('pg > integration', async (t) => {
     const {
         sql,
         connect,
@@ -181,7 +181,7 @@ tape('pg > integration', async t => {
 
     const query = sql`SELECT current_user`;
 
-    Object.keys(reqQuery).forEach(key => {
+    Object.keys(reqQuery).forEach((key) => {
         query
             .append(sql`, current_setting(${'request.query.' + key}, true) as `)
             .append(escape(key));

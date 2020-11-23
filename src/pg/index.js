@@ -52,7 +52,7 @@ const getConnectionString = ({
  *   connectionString: 'postgresql://dbuser:secretpassword@database.server.com:3211/mydb',
  * }
  */
-const connect = config => {
+const connect = (config) => {
     if (pool) {
         logger.info('bouquet/pg > pool already connected');
         return;
@@ -117,7 +117,7 @@ const getClient = async () => {
             }
         );
     }, 5000);
-    const release = err => {
+    const release = (err) => {
         // call the actual 'release' method, returning this client to the pool
         client.release(err);
         // clear our timeout

@@ -3,7 +3,7 @@ const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 const logger = require('../logger');
 
-const makeLogger = type => arg0 => {
+const makeLogger = (type) => (arg0) => {
     if (arg0 instanceof Error) {
         logger.error(`bouquet/express > redis ${type}`, arg0);
     } else {
@@ -11,7 +11,7 @@ const makeLogger = type => arg0 => {
     }
 };
 
-const retry_strategy = options => {
+const retry_strategy = (options) => {
     if (options.error && options.error.code === 'ECONNREFUSED') {
         // End reconnecting on a specific error and flush all commands with
         // a individual error

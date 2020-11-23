@@ -69,7 +69,7 @@ setupPostgraphile(server, {
     schemaName: 'app',
     mountPath: '/api/postgraphile',
     reqParts: ['headers', 'user', 'query', 'session', 'method', 'fullUrl'],
-    getRole: req => `app_${req.user ? req.user.roleName : 'anonymous'}`,
+    getRole: (req) => `app_${req.user ? req.user.roleName : 'anonymous'}`,
     defaultSettings: {
         application_name: 'bouquet',
         timezone: 'Europe/Amsterdam',
@@ -100,7 +100,7 @@ const routeHandler = async (req, res, next) => {
             'method',
             'fullUrl',
         ]),
-        req => `app_${req.user ? req.user.roleName : 'anonymous'}`,
+        (req) => `app_${req.user ? req.user.roleName : 'anonymous'}`,
         {
             application_name: 'bouquet',
             timezone: 'Europe/Amsterdam',

@@ -1,6 +1,6 @@
 const tape = require('tape');
 
-tape('express > session', async t => {
+tape('express > session', async (t) => {
     const { getRedisStore } = require('../src/express/session');
 
     const redisStore = getRedisStore();

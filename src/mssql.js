@@ -59,7 +59,7 @@ const poolPromise = new Promise((resolve, reject) => {
         });
 
         cp.connect()
-            .then(pool => {
+            .then((pool) => {
                 // note that the resolved `pool` is the same thing as `cp`
                 // pool === cp > true
                 // this is different from node-postgres where pool.connect resolves
@@ -68,7 +68,7 @@ const poolPromise = new Promise((resolve, reject) => {
                 logger.info('bouquet/mssql > connected', rest);
                 resolve(pool);
             })
-            .catch(err => {
+            .catch((err) => {
                 logger.error('bouquet/mssql > failed to connect ', err);
                 reject(err);
             });
@@ -116,7 +116,7 @@ const query = async (sql, title) => {
         title,
         duration,
         recordsets: result.recordsets.length,
-        records: result.recordsets.map(recordset => recordset.length),
+        records: result.recordsets.map((recordset) => recordset.length),
         rowsAffected: result.rowsAffected,
         returnValue: result.returnValue,
     });
@@ -130,13 +130,13 @@ const close = async () => {
     logger.info('bouquet/mssql > pool closed');
 };
 
-const all = async sql => {
+const all = async (sql) => {
     const { recordset } = await query(sql);
 
     return recordset;
 };
 
-const one = async sql => {
+const one = async (sql) => {
     const { recordset } = await query(sql);
 
     return recordset && recordset[0];

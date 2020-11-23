@@ -3,7 +3,7 @@ if (process.env.NODE_ENV !== 'production') require('dotenv').config();
 
 const tape = require('tape');
 
-tape('mssql > integration', async t => {
+tape('mssql > integration', async (t) => {
     const { connect, query, close } = require('../src/mssql');
 
     connect();

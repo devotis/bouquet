@@ -11,7 +11,8 @@
     "author": "Christiaan Westerbeek <chris@devotis.nl>",
     "license": "MIT",
     "scripts": {
-        "test": "node ./test"
+        "test": "node ./test",
+        "prettier": "prettier --single-quote --trailing-comma es5 --tab-width 4 --write '**/*.{md,js}'"
     },
     "dependencies": {
         "@graphile-contrib/pg-simplify-inflector": "^6.1.0",

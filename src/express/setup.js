@@ -9,7 +9,7 @@ const { NODE_ENV, PORT } = process.env;
 const isDevelopment = NODE_ENV !== 'production';
 const port = PORT || 5000;
 
-const errorHandling = server => {
+const errorHandling = (server) => {
     logger.info('bouquet/express > setup error handling');
 
     // catch 404 and forward to error handler
@@ -52,7 +52,7 @@ const setupPostgraphile = (
         schemaName = 'app',
         mountPath = '/api/postgraphile',
         reqParts = ['headers', 'user', 'query', 'session'],
-        getRole = req => `app_${req.user ? req.user.role : 'anonymous'}`,
+        getRole = (req) => `app_${req.user ? req.user.role : 'anonymous'}`,
         defaultSettings = {},
     } = {}
 ) => {
@@ -98,7 +98,7 @@ const setupPostgraphile = (
             // You just need to generate JWT tokens for your users...,
             // or use _pgSettings_ to indicate the current user.
             // https://www.graphile.org/postgraphile/usage-library/#pgsettings-function
-            pgSettings: req => {
+            pgSettings: (req) => {
                 // pgDefaultRole zou ingesteld moeten zijn als app_anonymous
                 // als geen pgSettings gebruikt zou worden
 
@@ -114,10 +114,10 @@ const setupPostgraphile = (
     );
 };
 
-const startServer = server => {
+const startServer = (server) => {
     logger.info('bouquet/express > starting server');
 
-    server.listen(port, error => {
+    server.listen(port, (error) => {
         if (error) {
             logger.error('bouquet/express > unable to start server', error);
         } else {

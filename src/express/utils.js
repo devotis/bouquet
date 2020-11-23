@@ -1,4 +1,4 @@
-const getRemoteAddress = req => {
+const getRemoteAddress = (req) => {
     return (
         (req.headers && req.headers['x-forwarded-for']) ||
         req.ip ||
