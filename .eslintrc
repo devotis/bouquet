@@ -26,14 +26,7 @@
         }
     },
     "rules": {
-        "prettier/prettier": [
-            "error",
-            {
-                "singleQuote": true,
-                "tabWidth": 4,
-                "trailingComma": "es5"
-            }
-        ],
+        "prettier/prettier": ["error"],
         "react/forbid-prop-types": ["off"],
         "react/prop-types": ["warn"],
         "react/jsx-no-bind": ["off"],
@@ -47,7 +40,7 @@
                 "ignoreRestSiblings": true
             }
         ],
-        "no-console": "off",
+        "no-console": "off"
     },
     "overrides": [
         {
