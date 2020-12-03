@@ -14,10 +14,19 @@ const getInfoOfObject = (obj = {}, level) => {
             Object.getOwnPropertyNames(obj)
                 .sort(sortMessageFirstAndStackLast)
                 .reduce((acc, name) => {
-                    // may contain message and stack
-                    // but also code, hint, details (pg)
-                    // or originalError, precedingErrors, etc (mssql)
-                    acc[name] = obj[name];
+                    if (name === 'response') {
+                        const res = obj[name];
+                        acc.response = {
+                            type: res.type,
+                            charset: res.charset,
+                            content: res.body || res.text,
+                        };
+                    } else {
+                        // may contain message and stack
+                        // but also code, hint, details (pg)
+                        // or originalError, precedingErrors, etc (mssql)
+                        acc[name] = obj[name];
+                    }
                     return acc;
                 }, {}),
         ];
