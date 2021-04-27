@@ -29,7 +29,7 @@
         "pg-sql2": "4.9.0",
         "postgraphile": "^4.9.2",
         "postgraphile-plugin-connection-filter": "^2.1.1",
-        "redis": "3.0.2",
+        "redis": "3.1.1",
         "sql-template-strings": "2.2.2",
         "useragent": "2.3.0"
     },
